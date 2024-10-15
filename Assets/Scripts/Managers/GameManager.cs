@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
-
+        // 테스트입니다.
     }
 
     public void TitleStart()
