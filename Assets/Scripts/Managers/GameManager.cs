@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     {
         if (_instance == null)
         {
-            // GameManager µ¿Àû »ı¼º
+            // GameManager ë™ì  ìƒì„±
             GameObject go = new GameObject { name = "GameManager" };
             _instance = go.AddComponent<GameManager>();
             DontDestroyOnLoad(go);

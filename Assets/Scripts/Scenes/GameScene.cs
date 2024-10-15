@@ -6,7 +6,7 @@ public class GameScene : MonoBehaviour
 {
     void Start()
     {
-        // Scene ÁøÀÔÁ¡
+        // Scene ì§„ì…ì 
         GameManager.Instance.GameStart();
     }
 }

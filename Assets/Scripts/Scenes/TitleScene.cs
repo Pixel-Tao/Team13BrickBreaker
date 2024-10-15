@@ -6,7 +6,7 @@ public class TitleScene : MonoBehaviour
 {
     void Start()
     {
-        // Scene ÁøÀÔÁ¡
-        GameManager.Instance.TitleStart(); //ÀÌÇØ¸¦ µ½±â À§ÇÑ ¿¹½Ã ÄÚµåÀÔ´Ï´Ù.
+        // Scene ì§„ì…ì 
+        GameManager.Instance.TitleStart(); //ì´í•´ë¥¼ ë•ê¸° ìœ„í•œ ì˜ˆì‹œ ì½”ë“œì…ë‹ˆë‹¤.
     }
 }
