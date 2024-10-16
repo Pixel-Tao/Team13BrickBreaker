@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TitleScene : MonoBehaviour
 {
-    void Start()
+  public void StartGame()
     {
-        // Scene 진입점
-        GameManager.Instance.TitleStart(); //이해를 돕기 위한 예시 코드입니다.
+        SceneManager.LoadScene("GameScene");
     }
 }
