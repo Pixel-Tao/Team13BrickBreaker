@@ -31,7 +31,7 @@ public class Wall : MonoBehaviour
             }
             else
             {
-                ball?.WallBounce(collision);
+                ball?.WallBounce(collision, wallType);
             }
         }
     }

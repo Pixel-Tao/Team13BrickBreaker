@@ -13,6 +13,7 @@ public class Paddle : MonoBehaviour
     [Range(1, 20)] public float speed;
 
     public float bounceAngleRange = 75f; // 공이 최대 튕겨나갈 수 있는 각도
+    private float[] arrAngles = { -30, -45, -60, 60, 45, 30 }; //발사시, 무작위로 발사될 각도 값의 배열
     private HashSet<BounceBall> myBalls = new HashSet<BounceBall>();
 
     private void Start()

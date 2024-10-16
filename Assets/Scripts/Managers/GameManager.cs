@@ -58,6 +58,10 @@ public class GameManager : MonoBehaviour
         PlayerJoin(PlayerType.Player1);
     }
 
+    /// <summary>
+    /// 공 생성
+    /// </summary>
+    /// <param name="owner"></param>
     public void BallGenerate(Paddle owner)
     {
         OnBallGenerateEvent?.Invoke(owner);
@@ -121,12 +125,21 @@ public class GameManager : MonoBehaviour
         return players[type].life;
     }
 
+    /// <summary>
+    /// 플레이어 목숨이 있는지 확인
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public bool HasLife(PlayerType type)
     {
         PlayerData player = players[type];
         return player.life > 0 && player.isDead == false;
     }
 
+    /// <summary>
+    /// 플레이어 사망처리
+    /// </summary>
+    /// <param name="type"></param>
     public void Dead(PlayerType type)
     {
         PlayerData playerData = players[type];
@@ -134,18 +147,31 @@ public class GameManager : MonoBehaviour
         players[type] = playerData;
     }
 
+    /// <summary>
+    /// 플레이어가 살아 있는지
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public bool IsAlive(PlayerType type)
     {
         return players[type].isDead == false;
     }
 
+    /// <summary>
+    /// 플레이어가 살아 있는지 죽었는지 확인하고 다 죽었으면 게임 오버
+    /// </summary>
     public void TryGameOver()
     {
         if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
+        // TODO : 게임 오버 처리
         SceneManager.LoadScene("TitleScene");
     }
 
+    /// <summary>
+    /// 플레이어 합류
+    /// </summary>
+    /// <param name="player"></param>
     public void PlayerJoin(PlayerType player)
     {
         PlayerData playerData = players[player];

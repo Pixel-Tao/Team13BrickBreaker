@@ -15,6 +15,9 @@ public class BounceBall : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private BounceBallDestroy ballDestroy;
 
+    //발사시, 무작위로 발사될 각도 값의 배열
+    private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 }; 
+
     public Paddle Owner { get; private set; }
 
     private void Awake()
@@ -63,15 +66,18 @@ public class BounceBall : MonoBehaviour
     public void Shoot()
     {
         isShooting = true;
-        // TODO : 랜덤 각도로 발사
-        rb2d.velocity = new Vector2(-5, -5).normalized * speed;
+        float bounceAngle = paddleRandomAngles[UnityEngine.Random.Range(0, paddleRandomAngles.Length)]; //랜덤 값이 반영된다.
+        Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
+        rb2d.velocity = direction.normalized * speed;
         Owner.OnShootEvent -= Shoot;
     }
+
     public void BrickBounce(Collision2D ballCollision)
     {
         WallBounce(ballCollision);
     }
-    public void WallBounce(Collision2D ballCollision)
+
+    public void WallBounce(Collision2D ballCollision, WallType wall = WallType.None)
     {
         Debug.Log("입장~");
         // 충돌한 표면의 법선 벡터
@@ -88,7 +94,6 @@ public class BounceBall : MonoBehaviour
 
         // 반사 벡터로 공의 속도 변경
         rb2d.velocity = reflectVector;
-
         UpdateCrashCount();
     }
 
@@ -103,19 +108,15 @@ public class BounceBall : MonoBehaviour
         // 충돌 지점의 상대적 위치 (-1: 왼쪽 끝, 0: 중앙, 1: 오른쪽 끝)
         float relativeHitPosition = (contactPoint.x - paddlePosition.x) / paddleWidth;
 
-        if(relativeHitPosition != 0)
-        {
-            // 충돌 위치에 따른 각도 계산
-            float bounceAngle = relativeHitPosition * paddle.bounceAngleRange;
+        // 충돌 위치에 따른 각도 계산
+        float bounceAngle = relativeHitPosition * paddle.bounceAngleRange;
 
-            // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
-            Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
-            direction = direction.normalized;
+        // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
+        Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
+        direction = direction.normalized;
 
-            // 공의 속도를 기존 속도 크기에 맞춰 반사
-            rb2d.velocity = direction * speed;
-
-        }
+        // 공의 속도를 기존 속도 크기에 맞춰 반사
+        rb2d.velocity = direction * speed;
         UpdateCrashCount();
     }
 
