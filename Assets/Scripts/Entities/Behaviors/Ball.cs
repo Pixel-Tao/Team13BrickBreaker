@@ -4,67 +4,31 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    // 발사되는 로직 (Vector3 * Speed?)
-    // 벽돌 충돌 감지
-    // 패들 충돌 감지 
-    // 속성: 파워, 속도, 
+    //TODO: Ball 사용 전 Wall 오브젝트에 각각 태그 걸어야함. (상위: TopWall, 좌우: Wall)
 
-    [SerializeField] private LayerMask levelCollisionLayer;
+    private float ballSpeed = 10f; 
+    private const float rotateValue = 180f; //180도 고정값
 
-    private bool isReady; //처음 공격 가능하게 하는 함수
 
-    private Rigidbody2D rigidbody; 
-    private SpriteRenderer spriteRenderer;
-
-    private Vector2 direction;
-
-    private float speed; //private float speed = GameManager.Instance.ballSpeed;
-    private int Damage; //private int Damage = GameManager.Instance.ballDamage;
-    //public Paddle paddle;
-
-    private void Awake()
+    private void Update()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();  
-
+        float applySpeed = Time.deltaTime * ballSpeed;
+        transform.Translate(new Vector2(0, applySpeed)); //vector값을 갖고와서 speed넣어서 쭉 보내버리는 함수 // 매시간마다(time.deltaTime) ballSpeed만큼 앞으로 갈것.
     }
-    void Start()
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        Vector3 temp = transform.eulerAngles; //볼의 각도를 가져와서 temp에 담아줌
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        rigidbody.velocity = direction * speed; //공의 속력
-    }
-
-    public void InitializeAttack(Vector2 direction) //초기 어택 설정
-    {
-        this.direction = direction;
-        transform.up = this.direction;
-        isReady = true;
-    }
-
-    //충돌시 처리
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        /*
-        if(IsLayerMatched(levelCollisionLayer.value, collision.gameObject.layer)) //레이어마스크 비교하여 레벨일 경우
+        if (other.gameObject.CompareTag("TopWall"))
         {
-            HealthSystem healthSystem = collision.GetComponent<HealthSystem>;
-            if (healthSystem != null)
-            {
-                bool isAttackApplied = healthSystem.ChangeHealth(-attackData.power);
-            }
+            temp.z = rotateValue - temp.z; //z값에 180 - (현재 볼의 각도)
+            transform.eulerAngles = temp;
         }
-        */ 
+
+        else if (other.gameObject.CompareTag("Wall"))
+        {
+            temp.z = (rotateValue * 2) - temp.z; //위로 갈수도 아래로갈수도 있기에 360'로 만들고 - temp.z
+            transform.eulerAngles = temp;
+        }
     }
-    private bool IsLayerMatched(int value, int layer)
-    {
-        return value == (value | 1 << layer);
-    }
-
-
-
 }
