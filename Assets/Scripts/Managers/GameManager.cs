@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,9 +21,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Action<PlayerType> OnPlayerJoin;
-    public Action<PlayerType, int> OnLifeChanged;
-    public Action<PlayerType, int> OnScoreChanged;
+    public event Action<PlayerType> OnPlayerJoinEvent;
+    public event Action<Paddle> OnBallGenerateEvent;
+    public event Action<PlayerType, int> OnLifeChangedEvent;
+    public event Action<PlayerType, int> OnScoreChangedEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -38,12 +40,10 @@ public class GameManager : MonoBehaviour
             if (playerType == PlayerType.None) continue;
             PlayerData playerData = new PlayerData();
             playerData.type = playerType;
-            playerData.life = DEFAULT_LIFE;
+            playerData.life = 0;
             playerData.score = 0;
-            playerData.isDead = false;
+            playerData.isDead = true;
             players.Add(playerType, playerData);
-            OnScoreChanged?.Invoke(playerData.type, playerData.score);
-            OnLifeChanged?.Invoke(playerData.type, playerData.life);
         }
     }
 
@@ -54,8 +54,13 @@ public class GameManager : MonoBehaviour
     {
         // 테스트입니다.
         GameReset();
-        // 플레이어 추가.
-        OnPlayerJoin?.Invoke(PlayerType.Player1);
+        //OnPlayerJoin?.Invoke(PlayerType.Player2);
+        PlayerJoin(PlayerType.Player1);
+    }
+
+    public void BallGenerate(Paddle owner)
+    {
+        OnBallGenerateEvent?.Invoke(owner);
     }
 
     /// <summary>
@@ -67,7 +72,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerData playerData = players[type];
         playerData.score += value;
-        OnScoreChanged?.Invoke(type, playerData.score);
+        players[type] = playerData;
+        OnScoreChangedEvent?.Invoke(type, playerData.score);
     }
 
     /// <summary>
@@ -88,7 +94,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerData playerData = players[type];
         playerData.life--;
-        OnLifeChanged?.Invoke(type, playerData.life);
+        players[type] = playerData;
+        OnLifeChangedEvent?.Invoke(type, playerData.life);
     }
 
     /// <summary>
@@ -100,7 +107,8 @@ public class GameManager : MonoBehaviour
     {
         PlayerData playerData = players[type];
         playerData.life += value;
-        OnLifeChanged?.Invoke(type, playerData.life);
+        players[type] = playerData;
+        OnLifeChangedEvent?.Invoke(type, playerData.life);
     }
 
     /// <summary>
@@ -113,8 +121,39 @@ public class GameManager : MonoBehaviour
         return players[type].life;
     }
 
-    public void TitleStart()
+    public bool HasLife(PlayerType type)
     {
-        // dev에서 수정함.
+        PlayerData player = players[type];
+        return player.life > 0 && player.isDead == false;
+    }
+
+    public void Dead(PlayerType type)
+    {
+        PlayerData playerData = players[type];
+        playerData.isDead = true;
+        players[type] = playerData;
+    }
+
+    public bool IsAlive(PlayerType type)
+    {
+        return players[type].isDead == false;
+    }
+
+    public void TryGameOver()
+    {
+        if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
+
+        SceneManager.LoadScene("TitleScene");
+    }
+
+    public void PlayerJoin(PlayerType player)
+    {
+        PlayerData playerData = players[player];
+        playerData.life = DEFAULT_LIFE;
+        playerData.isDead = false;
+        players[player] = playerData;
+
+        // 플레이어 추가.
+        OnPlayerJoinEvent?.Invoke(player);
     }
 }

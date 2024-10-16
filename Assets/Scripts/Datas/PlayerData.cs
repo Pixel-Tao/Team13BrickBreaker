@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum PlayerType
 {
     None,
@@ -5,6 +7,7 @@ public enum PlayerType
     Player2
 }
 
+[System.Serializable]
 public struct PlayerData
 {
     public PlayerType type;
