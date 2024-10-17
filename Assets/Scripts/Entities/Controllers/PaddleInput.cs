@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class PaddleInput : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class PaddleInput : MonoBehaviour
     public void OnKeyMove(InputValue value)
     {
         Vector2 input = value.Get<Vector2>();
-        Debug.Log(input);
         paddle.CallMove(input);
+        paddle.CallLook(input.x);
     }
 
     public void OnKeyShoot(InputValue value)
@@ -40,6 +41,7 @@ public class PaddleInput : MonoBehaviour
         dir.y = 0;
         dir.x = dir.x > 0 ? 1 : -1;
         paddle.CallMove(dir);
+        paddle.CallLook(dir.x);
     }
 
     public void OnMouseShoot(InputValue value)
