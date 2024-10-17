@@ -32,7 +32,8 @@ public class PaddleMovement : MonoBehaviour
 
     private void ApplyMovement(Vector2 movementDirection)
     {
-        //if (movementDirection.x == 0) return;
+        if (direction.x == 0) return;
+
         rigidbody.velocity = movementDirection * paddle.speed;
     }
 

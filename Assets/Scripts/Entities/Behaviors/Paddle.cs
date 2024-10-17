@@ -6,6 +6,7 @@ using UnityEngine;
 public class Paddle : MonoBehaviour
 {
     public event Action<Vector2> OnMoveEvent;
+    public event Action<float> OnLookEvent;
     public event Action OnShootEvent;
     public event Action OnPaddleDestoryEvent;
 
@@ -54,6 +55,13 @@ public class Paddle : MonoBehaviour
     public void CallMove(Vector2 vector2)
     {
         OnMoveEvent?.Invoke(vector2);
+    }
+
+    public void CallLook(float directionX)
+    {
+        // 1. 바라 볼 대상
+        // directionX 왼쪽 = -1, 1 = 오른쪽
+        OnLookEvent?.Invoke(directionX);
     }
 
     public void CallShoot()
