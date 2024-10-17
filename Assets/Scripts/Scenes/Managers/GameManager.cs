@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
             playerData.life = 0;
             playerData.score = 0;
             playerData.isDead = true;
+            playerData.ballPower = 0;
             players.Add(playerType, playerData);
         }
     }
@@ -182,5 +183,14 @@ public class GameManager : MonoBehaviour
 
         // 플레이어 추가.
         OnPlayerJoinEvent?.Invoke(player);
+    }
+
+    public void BallPowerUp(PlayerType type, int value)
+    {
+        PlayerData playerData = players[type];
+        playerData.ballPower += value;
+        players[type] = playerData;
+
+        Debug.Log(playerData.ballPower);
     }
 }

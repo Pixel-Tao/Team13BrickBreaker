@@ -13,7 +13,7 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject brickPrefab;
 
     private GameUI gameUI;
-
+    
     void Start()
     {
         // Scene 진입점

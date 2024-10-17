@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class BounceBall : MonoBehaviour
 {
@@ -16,15 +18,22 @@ public class BounceBall : MonoBehaviour
     private BounceBallDestroy ballDestroy;
 
     //발사시, 무작위로 발사될 각도 값의 배열
-    private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 }; 
+    private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 };
 
     public Paddle Owner { get; private set; }
+
+    //이호균 Action스크립트 추가내용
+    public static Action ball;
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         ballDestroy = GetComponent<BounceBallDestroy>();
+
+        //이호균 Action스크립트 추가내용
+        ball = () => { UseItemBallPowerUp(); };
+
     }
 
     private void Update()
@@ -130,5 +139,16 @@ public class BounceBall : MonoBehaviour
     {
         ballDestroy?.DestroyBall();
         Owner.RemoveMyBall(this);
+    }
+
+    public void UseItemBallPowerUp()
+    {
+        GameManager.Instance.BallPowerUp(playerType, 1);
+
+        //공 크기 1.3배 키우기
+        Vector3 currentScale = transform.localScale;
+        currentScale.x *= 1.3f;
+        currentScale.y *= 1.3f;
+        transform.localScale = currentScale;
     }
 }
