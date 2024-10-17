@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
         GameReset();
         //OnPlayerJoin?.Invoke(PlayerType.Player2);
         PlayerJoin(PlayerType.Player1);
+        PlayerJoin(PlayerType.Player2);
     }
 
     /// <summary>
