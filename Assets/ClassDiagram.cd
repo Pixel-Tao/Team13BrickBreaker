@@ -3,36 +3,113 @@
   <Class Name="GameManager">
     <Position X="2.5" Y="2.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ACkEgAAAEAgCAgAAgAAAAAAAAAAAAAAAYAACgAABAAA=</HashCode>
+      <HashCode>ASkEAACAAAACAAAAgAIAAAAgAEAQAAAIYAAGjAABAAA=</HashCode>
       <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PlayerBoardUI">
-    <Position X="7.25" Y="6.25" Width="1.5" />
+    <Position X="6.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAQAAAAAAAABAAAAAAAAAAAAAAEAAAYA=</HashCode>
       <FileName>Assets\Scripts\UIs\PlayerBoardUI.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GameUI">
-    <Position X="9" Y="6.25" Width="1.5" />
+    <Position X="8.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>wAAAAAAAACAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\UIs\GameUI.cs</FileName>
+      <FileName>Assets\Scripts\UIs\SceneUI\GameUI.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GameScene">
-    <Position X="13.25" Y="2.75" Width="1.5" />
+    <Position X="7.25" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAgAAAIABAAAQEAAQAAAAAAAQDAAAAA=</HashCode>
       <FileName>Assets\Scripts\Scenes\GameScene.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TitleScene">
-    <Position X="13.25" Y="4.75" Width="1.5" />
+    <Position X="5.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAQACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Scenes\TitleScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaddleInput">
+    <Position X="6.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAgAAAAAAAAAAAAAAABAAAAAAgBAAAgAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Controllers\PaddleInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaddleMovement">
+    <Position X="8.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAqAAIAAAgAAAAAAAAAAAAAAAAAAAAgAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Controllers\PaddleMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Wall">
+    <Position X="13.25" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TitleUI">
+    <Position X="10" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\SceneUI\TitleUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ball">
+    <Position X="13.25" Y="14.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAAAAAAAAAAAAAAAAAEAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Ball.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BounceBall">
+    <Position X="19.75" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQQAAhCBAgAApGAAAAAAAAEAAAAABRAAAAgAAGAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\BounceBall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BounceBallDestroy">
+    <Position X="19.75" Y="16" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\BounceBallDestroy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Brick">
+    <Position X="15.25" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAABgAAAAgAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Brick.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BrickDestory">
+    <Position X="15.25" Y="13" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAACAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\BrickDestory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Paddle">
+    <Position X="17.5" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAgAACAAIQBEAAILwAAAAAgEEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Paddle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaddleDestory">
+    <Position X="17.5" Y="15.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAgAAgAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\PaddleDestory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="PlayerData">
@@ -47,6 +124,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Assets\Scripts\Datas\PlayerData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WallType">
+    <Position X="13.25" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAACACAAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Wall.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="맑은 고딕" Size="9" />

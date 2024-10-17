@@ -5,8 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class TitleScene : MonoBehaviour
 {
-  public void StartGame()
+    [SerializeField] private GameObject titleUIPrefab;
+
+    private TitleUI titleUI;
+
+    private void Start()
     {
-        SceneManager.LoadScene("GameScene");
+        // TitleScene 진입점.
+        titleUI = Instantiate(titleUIPrefab, transform).GetComponent<TitleUI>();
+        //GameManager.Instance.TitleStart();
     }
 }
