@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
     public event Action<Paddle> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
-    public event Action OnGameOverEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -168,8 +167,7 @@ public class GameManager : MonoBehaviour
         if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
         // TODO : 게임 오버 처리
-        //SceneManager.LoadScene("TitleScene");
-        OnGameOverEvent?.Invoke();
+        SceneManager.LoadScene("TitleScene");
     }
 
     /// <summary>
