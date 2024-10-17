@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
             playerData.life = 0;
             playerData.score = 0;
             playerData.isDead = true;
-            playerData.ballPower = 0;
+            playerData.ballPower = 1;
             players.Add(playerType, playerData);
         }
     }
@@ -188,9 +188,10 @@ public class GameManager : MonoBehaviour
     public void BallPowerUp(PlayerType type, int value)
     {
         PlayerData playerData = players[type];
+
         playerData.ballPower += value;
         players[type] = playerData;
 
-        Debug.Log(playerData.ballPower);
+        Debug.Log($"공 파워업! 현재 공 파워: {playerData.ballPower}");
     }
 }

@@ -4,15 +4,9 @@ using UnityEngine;
 
 public abstract class Item : MonoBehaviour
 {
-
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        CheckPaddle(collision.transform);
-    }
-
-    void CheckPaddle(Transform other)
-    {
-        Debug.Log("CheckPaddle");
+        Debug.Log("차후 상속관계 고려한 부모클래스");
     }
 
 }

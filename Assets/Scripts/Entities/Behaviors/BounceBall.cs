@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEditor.U2D.Aseprite;
 
 public class BounceBall : MonoBehaviour
 {
-    [SerializeField] private PlayerType playerType;
     [SerializeField] private int crashCount = 0;
     [Range(1, 10)] public float speed = 1f;
     [SerializeField] private bool isShooting = false;
@@ -22,18 +22,11 @@ public class BounceBall : MonoBehaviour
 
     public Paddle Owner { get; private set; }
 
-    //이호균 Action스크립트 추가내용
-    public static Action ball;
-
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         ballDestroy = GetComponent<BounceBallDestroy>();
-
-        //이호균 Action스크립트 추가내용
-        ball = () => { UseItemBallPowerUp(); };
-
     }
 
     private void Update()
@@ -143,8 +136,10 @@ public class BounceBall : MonoBehaviour
 
     public void UseItemBallPowerUp()
     {
-        GameManager.Instance.BallPowerUp(playerType, 1);
+        //TODO: PlayerType받아오기
+        GameManager.Instance.BallPowerUp(PlayerType.Player1, 1); 
 
+        //TODO: 플레이어1, 플레이어2 볼 따로 적용 처리
         //공 크기 1.3배 키우기
         Vector3 currentScale = transform.localScale;
         currentScale.x *= 1.3f;
