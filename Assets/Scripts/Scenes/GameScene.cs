@@ -11,19 +11,28 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject fadeUIPrefab;
 
     private GameUI gameUI;
+    private FadeUI fadeUI;
 
     void Start()
     {
         // Scene 진입점
+        fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
         Instantiate(wallPrefab);
         Instantiate(brickAreaPrefab);
 
+        UIManager.Instance.OnFadeEvent -= Fade;
+        UIManager.Instance.OnFadeEvent += Fade;
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
-        GameManager.Instance.GameStart();
+
+        UIManager.Instance.FadeIn(() =>
+        {
+            GameManager.Instance.GameStart();
+        });
     }
 
     private void PlayerJoin(PlayerType playerType)
@@ -45,5 +54,10 @@ public class GameScene : MonoBehaviour
     {
         GameObject ball = Instantiate(bounceBallPrefab);
         ball.GetComponent<BounceBall>().SetInfo(owner);
+    }
+
+    private void Fade(FadeType fadeType, System.Action fadedAction)
+    {
+        fadeUI.Play(fadeType, fadedAction);
     }
 }

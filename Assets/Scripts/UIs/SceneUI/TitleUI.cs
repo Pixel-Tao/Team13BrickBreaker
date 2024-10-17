@@ -8,6 +8,10 @@ public class TitleUI : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("GameScene");
+        UIManager.Instance.FadeOut(() =>
+        {
+            SceneManager.LoadScene("GameScene");
+        });
+
     }
 }
