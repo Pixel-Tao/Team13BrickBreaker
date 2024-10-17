@@ -11,18 +11,23 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject gameoverUIPrefab;
 
     private GameUI gameUI;
+    private GameOverUI gameOverUI;
 
     void Start()
     {
         // Scene 진입점
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
+        gameOverUI = Instantiate(gameoverUIPrefab).GetComponent<GameOverUI>();
+        gameOverUI.gameObject.SetActive(false);
         Instantiate(wallPrefab);
         Instantiate(brickAreaPrefab);
 
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
+        GameManager.Instance.OnGameOverEvent += GameOver;
         GameManager.Instance.GameStart();
     }
 
@@ -45,5 +50,10 @@ public class GameScene : MonoBehaviour
     {
         GameObject ball = Instantiate(bounceBallPrefab);
         ball.GetComponent<BounceBall>().SetInfo(owner);
+    }
+
+    public void GameOver()
+    {
+        gameOverUI.gameObject.SetActive(true);
     }
 }
