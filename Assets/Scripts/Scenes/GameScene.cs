@@ -11,6 +11,10 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject AudioManager;
+    [SerializeField] private GameObject gameoverUIPrefab;
+
+
 
     private GameUI gameUI;
     
@@ -24,6 +28,10 @@ public class GameScene : MonoBehaviour
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
         GameManager.Instance.GameStart();
+
+        GameManager.Instance.audioManagerPrefab = AudioManager; 
+        GameManager.Instance.CreateAudio();
+
     }
 
     private void PlayerJoin(PlayerType playerType)
