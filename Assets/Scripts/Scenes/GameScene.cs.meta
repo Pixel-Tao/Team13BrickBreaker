@@ -3,7 +3,23 @@ guid: 33dd212dc0102e944ad7bec2e34a0268
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gameUIPrefab: {fileID: 8989737125355972309, guid: 7accb4e6be9b13946aa3c83739277b22,
+      type: 3}
+  - bounceBallPrefab: {fileID: 1148541203404948869, guid: 424812fb8fab86a41b313e6c81265e64,
+      type: 3}
+  - paddle1Prefab: {fileID: 8422982640128939768, guid: 04ba32bace80b5b4d92e167b3ceb4acc,
+      type: 3}
+  - paddle2Prefab: {fileID: 8831411833310202656, guid: 30878bfba7a047c4a8a1915f10302daa,
+      type: 3}
+  - wallPrefab: {fileID: 3442144807123580182, guid: 146fdb27221418343a7e4e4500d5616e,
+      type: 3}
+  - brickAreaPrefab: {fileID: 4524807447557862012, guid: fb5942a555e0343448fd7057cc37cae1,
+      type: 3}
+  - brickPrefab: {fileID: 925585421804845121, guid: a64224d42be32a74bb4728d0f770cc57,
+      type: 3}
+  - gameoverUIPrefab: {fileID: 4200120911123289871, guid: a18aa57f5f1e99f4aadf79f4a6f2292b,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
