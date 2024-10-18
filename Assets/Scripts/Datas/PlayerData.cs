@@ -14,6 +14,4 @@ public struct PlayerData
     public int score;
     public int life;
     public bool isDead;
-
-    public int ballPower;
 }

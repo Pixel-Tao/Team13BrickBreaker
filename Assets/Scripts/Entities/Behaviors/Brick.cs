@@ -15,9 +15,10 @@ public class Brick : MonoBehaviour
         if (ballRb != null && collision.gameObject.tag == "Ball")
         {
             BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
-            HpChange(ball, hp - 1);
+            HpChange(ball, hp - ball.Stat.CurrentBallStat.ballPower);
 
             ball.BrickBounce(collision);
+            AudioManager.Instance.PlaySfx(AudioClipType.brick_bounce);
         }
     }
 
