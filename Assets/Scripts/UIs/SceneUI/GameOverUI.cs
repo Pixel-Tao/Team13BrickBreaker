@@ -1,0 +1,21 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameOverUI : MonoBehaviour
+{
+    public event Action OnRestartClick;
+
+    public void OnGameOver()
+    {
+        OnRestartClick?.Invoke();
+    }
+
+    public void Gostart()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+    
+}
