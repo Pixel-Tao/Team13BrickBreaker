@@ -93,5 +93,10 @@ public class Paddle : MonoBehaviour
             BounceBall ballRb = collision.gameObject.GetComponent<BounceBall>();
             ballRb.PaddleBounce(collision, this);
         }
+        else if (collision.gameObject.CompareTag("Item"))
+        {
+            // 아이템 획득
+
+        }
     }
 }

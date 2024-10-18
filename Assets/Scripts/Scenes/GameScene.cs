@@ -14,6 +14,8 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject AudioManager;
     [SerializeField] private GameObject gameoverUIPrefab;
 
+    [SerializeField] private List<GameObject> itemPrefabs;
+
     [SerializeField] private StageLevelSO stageLevelSO;
 
     private GameUI gameUI;
@@ -31,8 +33,10 @@ public class GameScene : MonoBehaviour
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
         GameManager.Instance.OnStageLoadEvent -= LoadStage;
         GameManager.Instance.OnStageLoadEvent += LoadStage;
+        GameManager.Instance.OnItemDropEvent -= ItemDrop;
+        GameManager.Instance.OnItemDropEvent += ItemDrop;
 
-        GameManager.Instance.LoadStage();
+        GameManager.Instance.LoadStage(itemPrefabs.Count);
         GameManager.Instance.GameStart();
 
         //GameManager.Instance.audioManagerPrefab = AudioManager;
@@ -65,5 +69,11 @@ public class GameScene : MonoBehaviour
     {
         GameObject stagePrefab = stageLevelSO.stages[level - 1];
         currentStage = Instantiate(stagePrefab).GetComponent<Stage>();
+    }
+
+    private void ItemDrop(Vector3 pos, int index)
+    {
+        GameObject item = Instantiate(itemPrefabs[index]);
+        item.transform.position = pos;
     }
 }

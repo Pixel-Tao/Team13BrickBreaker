@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private readonly int DEFAULT_LIFE = 3;
+    private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
 
     // 오디오 매니저 테스트
     public GameObject audioManagerPrefab;
@@ -14,6 +15,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { Init(); return _instance; } }
 
     private int selectedLevel = 2;
+    private int dropableItemCount = 0;
 
     private static void Init()
     {
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void CreateAudio () // 오디오 생성
+    public void CreateAudio() // 오디오 생성
     {
         // 오디오 매니저가 있는지 확인하고 없으면 프리팹을 동적으로 생성
         if (FindObjectOfType<AudioManager>() == null)
@@ -35,12 +37,13 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(audioManager); // 오디오 매니저는 씬이 바뀌어도 파괴되지 않도록 설정
         }
     }
- 
+
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
     public event Action<int> OnStageLoadEvent;
+    public event Action<Vector3, int> OnItemDropEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -64,8 +67,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadStage()
+    public void LoadStage(int dropableItemCount)
     {
+        this.dropableItemCount = dropableItemCount;
         OnStageLoadEvent?.Invoke(selectedLevel);
     }
 
@@ -78,7 +82,7 @@ public class GameManager : MonoBehaviour
         GameReset();
         //OnPlayerJoin?.Invoke(PlayerType.Player2);
         PlayerJoin(PlayerType.Player1);
-        PlayerJoin(PlayerType.Player2);
+        //PlayerJoin(PlayerType.Player2);
 
     }
 
@@ -186,7 +190,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void TryGameOver()
     {
-        if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
+        if (IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
         // TODO : 게임 오버 처리
         SceneManager.LoadScene("TitleScene");
@@ -215,5 +219,11 @@ public class GameManager : MonoBehaviour
         players[type] = playerData;
 
         Debug.Log($"공 파워업! 현재 공 파워: {playerData.ballPower}");
+    }
+
+    public void DropItem(Vector3 pos)
+    {
+        if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
+        OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
     }
 }

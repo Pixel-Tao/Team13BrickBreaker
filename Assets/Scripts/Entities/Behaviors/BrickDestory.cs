@@ -34,5 +34,6 @@ public class BrickDestory : MonoBehaviour
         Destroy(gameObject, 1f);
 
         GameManager.Instance.AddScrore(playerType, 100);
+        GameManager.Instance.DropItem(transform.position);
     }
 }

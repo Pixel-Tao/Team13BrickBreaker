@@ -6,16 +6,7 @@ using UnityEngine;
 public class Brick : MonoBehaviour
 {
     public event Action<PlayerType> OnBrickDestroyedEvent;
-    [SerializeField][Range(0, 99)]private int hp = 5;
-
-    //Vector3 pos;
-
-    public GameObject ballPowerUpItem;
-
-    private void Start()
-    {
-        hp = 5;
-    }
+    [SerializeField][Range(0, 99)] private int hp = 5;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -37,16 +28,6 @@ public class Brick : MonoBehaviour
         if (hp <= 0)
         {
             OnBrickDestroyedEvent?.Invoke(ball.Owner.playerType);
-            MakeItem();
         }
-    }
-
-
-    private void MakeItem()
-    {
-        Vector3 brickPos = this.transform.position;
-
-        GameObject item = Instantiate(ballPowerUpItem) as GameObject;
-        item.transform.position = brickPos;
     }
 }
