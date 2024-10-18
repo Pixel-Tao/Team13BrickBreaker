@@ -14,23 +14,29 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject AudioManager;
     [SerializeField] private GameObject gameoverUIPrefab;
 
-
+    [SerializeField] private StageLevelSO stageLevelSO;
 
     private GameUI gameUI;
+    private Stage currentStage;
     
     void Start()
     {
         // Scene 진입점
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
         Instantiate(wallPrefab);
-        Instantiate(brickAreaPrefab);
 
+        GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
+        GameManager.Instance.OnBallGenerateEvent -= BallGenerate;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
+        GameManager.Instance.OnStageLoadEvent -= LoadStage;
+        GameManager.Instance.OnStageLoadEvent += LoadStage;
+
+        GameManager.Instance.LoadStage();
         GameManager.Instance.GameStart();
 
-        GameManager.Instance.audioManagerPrefab = AudioManager; 
-        GameManager.Instance.CreateAudio();
+        //GameManager.Instance.audioManagerPrefab = AudioManager;
+        //GameManager.Instance.CreateAudio();
 
     }
 
@@ -53,5 +59,11 @@ public class GameScene : MonoBehaviour
     {
         GameObject ball = Instantiate(bounceBallPrefab);
         ball.GetComponent<BounceBall>().SetInfo(owner);
+    }
+
+    private void LoadStage(int level)
+    {
+        GameObject stagePrefab = stageLevelSO.stages[level - 1];
+        currentStage = Instantiate(stagePrefab).GetComponent<Stage>();
     }
 }

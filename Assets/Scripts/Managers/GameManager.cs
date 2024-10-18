@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
 
+    private int selectedLevel = 2;
+
     private static void Init()
     {
         if (_instance == null)
@@ -34,11 +36,11 @@ public class GameManager : MonoBehaviour
         }
     }
  
-
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
+    public event Action<int> OnStageLoadEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -60,6 +62,11 @@ public class GameManager : MonoBehaviour
             playerData.ballPower = 1;
             players.Add(playerType, playerData);
         }
+    }
+
+    public void LoadStage()
+    {
+        OnStageLoadEvent?.Invoke(selectedLevel);
     }
 
     /// <summary>
