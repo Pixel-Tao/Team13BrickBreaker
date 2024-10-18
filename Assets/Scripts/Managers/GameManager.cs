@@ -6,9 +6,16 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private readonly int DEFAULT_LIFE = 3;
+    private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
 
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
+
+    private int selectedLevel = 2;
+    private int dropableItemCount = 0;
+
+    public float MinX { get; private set; }
+    public float MaxX { get; private set; }
 
     private static void Init()
     {
@@ -22,9 +29,11 @@ public class GameManager : MonoBehaviour
     }
 
     public event Action<PlayerType> OnPlayerJoinEvent;
-    public event Action<Paddle> OnBallGenerateEvent;
+    public event Action<Paddle, Vector3?> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
+    public event Action<int> OnStageLoadEvent;
+    public event Action<Vector3, int> OnItemDropEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -47,25 +56,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadStage(int dropableItemCount)
+    {
+        this.dropableItemCount = dropableItemCount;
+        OnStageLoadEvent?.Invoke(selectedLevel);
+    }
+
     /// <summary>
     /// 게임 시작
     /// </summary>
     public void GameStart()
     {
-        // 테스트입니다.
         GameReset();
-        //OnPlayerJoin?.Invoke(PlayerType.Player2);
+
         PlayerJoin(PlayerType.Player1);
         PlayerJoin(PlayerType.Player2);
+
     }
 
     /// <summary>
     /// 공 생성
     /// </summary>
     /// <param name="owner"></param>
-    public void BallGenerate(Paddle owner)
+    public void BallGenerate(Paddle owner, Vector3? position = null)
     {
-        OnBallGenerateEvent?.Invoke(owner);
+        OnBallGenerateEvent?.Invoke(owner, position);
     }
 
     /// <summary>
@@ -163,7 +178,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void TryGameOver()
     {
-        if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
+        if (IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
         // TODO : 게임 오버 처리
         SceneManager.LoadScene("TitleScene");
@@ -182,5 +197,21 @@ public class GameManager : MonoBehaviour
 
         // 플레이어 추가.
         OnPlayerJoinEvent?.Invoke(player);
+    }
+
+    public void DropItem(Vector3 pos)
+    {
+        if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
+        OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
+    }
+
+    public void SetMinX(float x)
+    {
+        this.MinX = x;
+    }
+
+    public void SetMaxX(float x)
+    {
+        this.MaxX = x;
     }
 }

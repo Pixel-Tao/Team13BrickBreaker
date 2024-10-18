@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Paddle : MonoBehaviour
@@ -10,6 +10,8 @@ public class Paddle : MonoBehaviour
     public event Action OnShootEvent;
     public event Action OnPaddleDestoryEvent;
 
+    public PaddleStat Stat { get; private set; }
+
     public PlayerType playerType;
     [Range(1, 20)] public float speed;
 
@@ -17,6 +19,10 @@ public class Paddle : MonoBehaviour
     private float[] arrAngles = { -30, -45, -60, 60, 45, 30 }; //발사시, 무작위로 발사될 각도 값의 배열
     private HashSet<BounceBall> myBalls = new HashSet<BounceBall>();
 
+    private void Awake()
+    {
+        Stat = GetComponent<PaddleStat>();
+    }
     private void Start()
     {
         myBalls.Clear();
@@ -81,12 +87,8 @@ public class Paddle : MonoBehaviour
             myBalls.Remove(ball);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public BounceBall GetFirstBall()
     {
-        if (collision.gameObject.CompareTag("Ball"))
-        {
-            BounceBall ballRb = collision.gameObject.GetComponent<BounceBall>();
-            ballRb.PaddleBounce(collision, this);
-        }
+        return myBalls.FirstOrDefault();
     }
 }

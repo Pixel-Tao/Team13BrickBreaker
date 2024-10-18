@@ -19,6 +19,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetEvent(Action<FadeType, Action> method)
+    {
+        OnFadeEvent = null;
+        OnFadeEvent += method;
+    }
+
     public void FadeIn(Action fadedAction = null)
     {
         // 검은 화면이 점점 밝아지는 효과
