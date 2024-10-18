@@ -11,7 +11,6 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
-    [SerializeField] private GameObject AudioManager;
     [SerializeField] private GameObject gameoverUIPrefab;
 
     [SerializeField] private List<GameObject> itemPrefabs;
@@ -39,9 +38,9 @@ public class GameScene : MonoBehaviour
         GameManager.Instance.LoadStage(itemPrefabs.Count);
         GameManager.Instance.GameStart();
 
-        //GameManager.Instance.audioManagerPrefab = AudioManager;
-        //GameManager.Instance.CreateAudio();
-
+        AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
+        AudioManager.Instance.VolumeBgm(0.1f);
+        AudioManager.Instance.VolumeSfx(0.5f);
     }
 
     private void PlayerJoin(PlayerType playerType)

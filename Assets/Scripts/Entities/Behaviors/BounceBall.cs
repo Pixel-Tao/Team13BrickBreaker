@@ -72,6 +72,7 @@ public class BounceBall : MonoBehaviour
         Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
         rb2d.velocity = direction.normalized * speed;
         Owner.OnShootEvent -= Shoot;
+        AudioManager.Instance.PlaySfx(AudioClipType.shoot);
     }
 
     public void BrickBounce(Collision2D ballCollision)

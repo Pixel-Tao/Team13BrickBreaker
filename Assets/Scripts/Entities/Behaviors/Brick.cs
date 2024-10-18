@@ -18,6 +18,7 @@ public class Brick : MonoBehaviour
             HpChange(ball, hp - 1);
 
             ball.BrickBounce(collision);
+            AudioManager.Instance.PlaySfx(AudioClipType.brick_bounce);
         }
     }
 

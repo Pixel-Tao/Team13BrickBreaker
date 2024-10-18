@@ -10,7 +10,6 @@ public class Paddle : MonoBehaviour
     public event Action OnShootEvent;
     public event Action OnPaddleDestoryEvent;
 
-    AudioSource audioSource; // 오디오 추가 
     public AudioClip clip; // 오디오 추가
 
     public PlayerType playerType;
@@ -22,7 +21,6 @@ public class Paddle : MonoBehaviour
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();  // 오디오 추가
         myBalls.Clear();
         GameManager.Instance.BallGenerate(this);
     }
@@ -71,7 +69,6 @@ public class Paddle : MonoBehaviour
     public void CallShoot()
     {
         OnShootEvent?.Invoke();
-        audioSource.PlayOneShot(clip); // shot을 누를 때 소리가 나게
     }
 
     public void AddMyBall(BounceBall ball)

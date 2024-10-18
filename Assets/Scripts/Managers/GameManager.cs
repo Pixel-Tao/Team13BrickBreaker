@@ -28,16 +28,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void CreateAudio() // 오디오 생성
-    {
-        // 오디오 매니저가 있는지 확인하고 없으면 프리팹을 동적으로 생성
-        if (FindObjectOfType<AudioManager>() == null)
-        {
-            GameObject audioManager = Instantiate(audioManagerPrefab);
-            DontDestroyOnLoad(audioManager); // 오디오 매니저는 씬이 바뀌어도 파괴되지 않도록 설정
-        }
-    }
-
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;

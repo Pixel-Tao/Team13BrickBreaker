@@ -32,6 +32,7 @@ public class Wall : MonoBehaviour
             else
             {
                 ball?.WallBounce(collision, wallType);
+                AudioManager.Instance.PlaySfx(AudioClipType.wall_bounce);
             }
         }
     }

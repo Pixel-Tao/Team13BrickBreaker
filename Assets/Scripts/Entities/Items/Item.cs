@@ -8,5 +8,4 @@ public abstract class Item : MonoBehaviour
     {
         Debug.Log("차후 상속관계 고려한 부모클래스");
     }
-
 }
