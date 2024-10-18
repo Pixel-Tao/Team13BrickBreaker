@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
 {
     private readonly int DEFAULT_LIFE = 3;
 
+    // 오디오 매니저 테스트
+    public GameObject audioManagerPrefab;
+
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
 
@@ -21,11 +24,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void CreateAudio () // 오디오 생성
+    {
+        // 오디오 매니저가 있는지 확인하고 없으면 프리팹을 동적으로 생성
+        if (FindObjectOfType<AudioManager>() == null)
+        {
+            GameObject audioManager = Instantiate(audioManagerPrefab);
+            DontDestroyOnLoad(audioManager); // 오디오 매니저는 씬이 바뀌어도 파괴되지 않도록 설정
+        }
+    }
+ 
+
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
-    public event Action OnGameOverEvent;
 
     private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
 
@@ -44,6 +57,7 @@ public class GameManager : MonoBehaviour
             playerData.life = 0;
             playerData.score = 0;
             playerData.isDead = true;
+            playerData.ballPower = 1;
             players.Add(playerType, playerData);
         }
     }
@@ -58,6 +72,7 @@ public class GameManager : MonoBehaviour
         //OnPlayerJoin?.Invoke(PlayerType.Player2);
         PlayerJoin(PlayerType.Player1);
         PlayerJoin(PlayerType.Player2);
+
     }
 
     /// <summary>
@@ -167,8 +182,7 @@ public class GameManager : MonoBehaviour
         if(IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
         // TODO : 게임 오버 처리
-        //SceneManager.LoadScene("TitleScene");
-        OnGameOverEvent?.Invoke();
+        SceneManager.LoadScene("TitleScene");
     }
 
     /// <summary>
@@ -184,5 +198,15 @@ public class GameManager : MonoBehaviour
 
         // 플레이어 추가.
         OnPlayerJoinEvent?.Invoke(player);
+    }
+
+    public void BallPowerUp(PlayerType type, int value)
+    {
+        PlayerData playerData = players[type];
+
+        playerData.ballPower += value;
+        players[type] = playerData;
+
+        Debug.Log($"공 파워업! 현재 공 파워: {playerData.ballPower}");
     }
 }

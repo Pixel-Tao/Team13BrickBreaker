@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEditor.U2D.Aseprite;
 
 public class BounceBall : MonoBehaviour
 {
-    [SerializeField] private PlayerType playerType;
     [SerializeField] private int crashCount = 0;
     [Range(1, 10)] public float speed = 1f;
     [SerializeField] private bool isShooting = false;
@@ -16,7 +18,7 @@ public class BounceBall : MonoBehaviour
     private BounceBallDestroy ballDestroy;
 
     //발사시, 무작위로 발사될 각도 값의 배열
-    private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 }; 
+    private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 };
 
     public Paddle Owner { get; private set; }
 
@@ -130,5 +132,18 @@ public class BounceBall : MonoBehaviour
     {
         ballDestroy?.DestroyBall();
         Owner.RemoveMyBall(this);
+    }
+
+    public void UseItemBallPowerUp()
+    {
+        //TODO: PlayerType받아오기
+        GameManager.Instance.BallPowerUp(PlayerType.Player1, 1); 
+
+        //TODO: 플레이어1, 플레이어2 볼 따로 적용 처리
+        //공 크기 1.3배 키우기
+        Vector3 currentScale = transform.localScale;
+        currentScale.x *= 1.3f;
+        currentScale.y *= 1.3f;
+        transform.localScale = currentScale;
     }
 }

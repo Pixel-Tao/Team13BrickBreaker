@@ -11,24 +11,27 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject AudioManager;
     [SerializeField] private GameObject gameoverUIPrefab;
 
-    private GameUI gameUI;
-    private GameOverUI gameOverUI;
 
+
+    private GameUI gameUI;
+    
     void Start()
     {
         // Scene 진입점
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
-        gameOverUI = Instantiate(gameoverUIPrefab).GetComponent<GameOverUI>();
-        gameOverUI.gameObject.SetActive(false);
         Instantiate(wallPrefab);
         Instantiate(brickAreaPrefab);
 
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
-        GameManager.Instance.OnGameOverEvent += GameOver;
         GameManager.Instance.GameStart();
+
+        GameManager.Instance.audioManagerPrefab = AudioManager; 
+        GameManager.Instance.CreateAudio();
+
     }
 
     private void PlayerJoin(PlayerType playerType)
@@ -50,10 +53,5 @@ public class GameScene : MonoBehaviour
     {
         GameObject ball = Instantiate(bounceBallPrefab);
         ball.GetComponent<BounceBall>().SetInfo(owner);
-    }
-
-    public void GameOver()
-    {
-        gameOverUI.gameObject.SetActive(true);
     }
 }
