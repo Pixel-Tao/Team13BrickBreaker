@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float y = 0;
 
-        
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
 
         // 키보드와 마우스 입력을 더해서 플레이어의 위치를 업데이트

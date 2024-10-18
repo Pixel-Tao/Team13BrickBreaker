@@ -8,14 +8,14 @@ public class GameManager : MonoBehaviour
     private readonly int DEFAULT_LIFE = 3;
     private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
 
-    // 오디오 매니저 테스트
-    public GameObject audioManagerPrefab;
-
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
 
     private int selectedLevel = 2;
     private int dropableItemCount = 0;
+
+    public float MinX { get; private set; }
+    public float MaxX { get; private set; }
 
     private static void Init()
     {
@@ -52,7 +52,6 @@ public class GameManager : MonoBehaviour
             playerData.life = 0;
             playerData.score = 0;
             playerData.isDead = true;
-            playerData.ballPower = 1;
             players.Add(playerType, playerData);
         }
     }
@@ -68,11 +67,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameStart()
     {
-        // 테스트입니다.
         GameReset();
-        //OnPlayerJoin?.Invoke(PlayerType.Player2);
+
         PlayerJoin(PlayerType.Player1);
-        //PlayerJoin(PlayerType.Player2);
+        PlayerJoin(PlayerType.Player2);
 
     }
 
@@ -201,19 +199,19 @@ public class GameManager : MonoBehaviour
         OnPlayerJoinEvent?.Invoke(player);
     }
 
-    public void BallPowerUp(PlayerType type, int value)
-    {
-        PlayerData playerData = players[type];
-
-        playerData.ballPower += value;
-        players[type] = playerData;
-
-        Debug.Log($"공 파워업! 현재 공 파워: {playerData.ballPower}");
-    }
-
     public void DropItem(Vector3 pos)
     {
         if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
         OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
+    }
+
+    public void SetMinX(float x)
+    {
+        this.MinX = x;
+    }
+
+    public void SetMaxX(float x)
+    {
+        this.MaxX = x;
     }
 }

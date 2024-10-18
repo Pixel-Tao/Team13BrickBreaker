@@ -12,6 +12,7 @@ public class GameScene : MonoBehaviour
     [SerializeField] private GameObject brickAreaPrefab;
     [SerializeField] private GameObject brickPrefab;
     [SerializeField] private GameObject gameoverUIPrefab;
+    [SerializeField] private GameObject fadeUIPrefab;
 
     [SerializeField] private List<GameObject> itemPrefabs;
 
@@ -19,12 +20,17 @@ public class GameScene : MonoBehaviour
 
     private GameUI gameUI;
     private Stage currentStage;
-    
+
+    private FadeUI fadeUI;
+
     void Start()
     {
         // Scene 진입점
+        fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
         Instantiate(wallPrefab);
+
+        UIManager.Instance.SetEvent(Fade);
 
         GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
@@ -36,11 +42,15 @@ public class GameScene : MonoBehaviour
         GameManager.Instance.OnItemDropEvent += ItemDrop;
 
         GameManager.Instance.LoadStage(itemPrefabs.Count);
-        GameManager.Instance.GameStart();
 
-        AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
-        AudioManager.Instance.VolumeBgm(0.1f);
-        AudioManager.Instance.VolumeSfx(0.5f);
+        UIManager.Instance.FadeIn(() =>
+        {
+            GameManager.Instance.GameStart();
+
+            AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
+            AudioManager.Instance.VolumeBgm(0.1f);
+            AudioManager.Instance.VolumeSfx(0.5f);
+        });
     }
 
     private void PlayerJoin(PlayerType playerType)
@@ -80,5 +90,10 @@ public class GameScene : MonoBehaviour
     {
         GameObject item = Instantiate(itemPrefabs[index]);
         item.transform.position = pos;
+    }
+
+    private void Fade(FadeType fadeType, System.Action fadedAction)
+    {
+        fadeUI.Play(fadeType, fadedAction);
     }
 }

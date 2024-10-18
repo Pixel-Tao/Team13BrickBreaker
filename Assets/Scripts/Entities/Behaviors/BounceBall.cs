@@ -106,16 +106,12 @@ public class BounceBall : MonoBehaviour
 
     public void WallBounce(Collision2D ballCollision, WallType wall = WallType.None)
     {
-        Debug.Log("입장~");
         // 충돌한 표면의 법선 벡터
         Vector2 normal = ballCollision.contacts[0].normal * -1;
-        Debug.Log(normal);
         // 공의 현재 이동 벡터 (입사 벡터)
         Vector2 incomingVector = direction;
-        Debug.Log(incomingVector);
         // 반사 벡터 계산
         Vector2 reflectVector = Vector2.Reflect(incomingVector, normal);
-        Debug.Log(reflectVector);
 
         reflectVector = reflectVector.normalized * Stat.CurrentBallStat.ballSpeed;
 
@@ -158,19 +154,6 @@ public class BounceBall : MonoBehaviour
         Owner.Stat.OnItemEffectEvent -= TakeItemEffect;
         ballDestroy?.DestroyBall();
         Owner.RemoveMyBall(this);
-    }
-
-    public void UseItemBallPowerUp()
-    {
-        //TODO: PlayerType받아오기
-        GameManager.Instance.BallPowerUp(PlayerType.Player1, 1);
-
-        //TODO: 플레이어1, 플레이어2 볼 따로 적용 처리
-        //공 크기 1.3배 키우기
-        Vector3 currentScale = transform.localScale;
-        currentScale.x *= 1.3f;
-        currentScale.y *= 1.3f;
-        transform.localScale = currentScale;
     }
 
     private void TakeItemEffect(Item item)
