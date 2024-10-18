@@ -58,10 +58,16 @@ public class GameScene : MonoBehaviour
             gameUI.PlayerJoin(playerType);
     }
 
-    private void BallGenerate(Paddle owner)
+
+    private void BallGenerate(Paddle owner, Vector3? position = null)
     {
         GameObject ball = Instantiate(bounceBallPrefab);
-        ball.GetComponent<BounceBall>().SetInfo(owner);
+        if (position.HasValue)
+            // 아이템으로 인해서 생성 되는 공의 위치를 조정하기 위한 함수
+            ball.GetComponent<BounceBall>().SetInfo(owner, position.Value);
+        else
+            // Owner 기준으로 공이 생성되도록 하는 함수
+            ball.GetComponent<BounceBall>().SetInfo(owner);
     }
 
     private void LoadStage(int level)

@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     }
 
     public event Action<PlayerType> OnPlayerJoinEvent;
-    public event Action<Paddle> OnBallGenerateEvent;
+    public event Action<Paddle, Vector3?> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
     public event Action<int> OnStageLoadEvent;
@@ -80,9 +80,9 @@ public class GameManager : MonoBehaviour
     /// 공 생성
     /// </summary>
     /// <param name="owner"></param>
-    public void BallGenerate(Paddle owner)
+    public void BallGenerate(Paddle owner, Vector3? position = null)
     {
-        OnBallGenerateEvent?.Invoke(owner);
+        OnBallGenerateEvent?.Invoke(owner, position);
     }
 
     /// <summary>

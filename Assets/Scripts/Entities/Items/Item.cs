@@ -2,10 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum  ItemType
+{
+    None,
+    BallPowerUp,
+    BallMultipleAdd,
+    BallSpeedDown,
+}
+
 public abstract class Item : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    public abstract ItemType ItemType { get; protected set; }
+
+    public void DestroyItem()
     {
-        Debug.Log("차후 상속관계 고려한 부모클래스");
+        Destroy(gameObject);
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 아이템이 플레이어에게 효과를 주는 방향
+        if (collision.CompareTag("Paddle"))
+        {
+            // 플레이어게 효과를 줌.
+            collision.GetComponent<PaddleStat>().ApplyItemEffect(this);
+            // 사라짐
+            DestroyItem();
+        }
+        else if(collision.CompareTag("BottomWall"))
+        {
+            // 바닥에 닿으면 사라짐
+            DestroyItem();
+        }
     }
 }
