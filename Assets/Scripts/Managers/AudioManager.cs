@@ -36,6 +36,7 @@ public class AudioManager : MonoBehaviour
             if (bgm == null)
             {
                 GameObject go = new GameObject { name = "BGM" };
+                go.transform.SetParent(transform);
                 bgm = go.AddComponent<AudioSource>();
                 bgm.loop = true;
             }
@@ -50,6 +51,7 @@ public class AudioManager : MonoBehaviour
             if (sfx == null)
             {
                 GameObject go = new GameObject { name = "SFX" };
+                go.transform.SetParent(transform);
                 sfx = go.AddComponent<AudioSource>();
             }
             return sfx;

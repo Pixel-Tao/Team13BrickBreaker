@@ -14,8 +14,6 @@ public enum BallReflectType
 
 public class BounceBallReflect : MonoBehaviour
 {
-    public event Action<GameObject> OnReflectedEvent;
-
     public BallReflectType reflectType = BallReflectType.None;
     LayerMask includeRayLayerMask;
     private CircleCollider2D circleCollider;
@@ -87,8 +85,7 @@ public class BounceBallReflect : MonoBehaviour
         }
 
         reflectVector = reflectVector.normalized * ball.Stat.CurrentBallStat.ballSpeed;
-
-        OnReflectedEvent?.Invoke(wallCollder.gameObject);
+        ball.Reflected(wallCollder.gameObject); 
         // 반사 벡터로 공의 속도 변경
         movement.Move(reflectVector);
     }
@@ -110,7 +107,7 @@ public class BounceBallReflect : MonoBehaviour
         // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
         Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
         direction = direction.normalized * ball.Stat.CurrentBallStat.ballSpeed;
-        OnReflectedEvent?.Invoke(paddle.gameObject);
+        ball.Reflected(paddle.gameObject);
         // 공의 속도를 기존 속도 크기에 맞춰 반사
         movement.Move(direction);
     }
@@ -132,7 +129,7 @@ public class BounceBallReflect : MonoBehaviour
             nextDirection = Quaternion.Euler(0, 0, additionalBounceAngle) * nextDirection;
         }
         nextDirection = nextDirection.normalized;
-        OnReflectedEvent?.Invoke(wallCollder.gameObject);
+        ball.Reflected(wallCollder.gameObject);
         movement.Move(nextDirection);
     }
     public void PaddleReflectBounce(Collision2D ballCollision, Paddle paddle)
@@ -151,7 +148,7 @@ public class BounceBallReflect : MonoBehaviour
         // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
         Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
         direction = direction.normalized;
-        OnReflectedEvent?.Invoke(paddle.gameObject);
+        ball.Reflected(paddle.gameObject);
         movement.Move(direction);
     }
     #endregion
@@ -182,7 +179,7 @@ public class BounceBallReflect : MonoBehaviour
                 nextDirection = nextDirection.normalized;
                 Debug.Log($"ball direction : {prevDirection} -> {nextDirection}");
             }
-            OnReflectedEvent?.Invoke(contactCollider.gameObject);
+            ball.Reflected(contactCollider.gameObject);
             return nextDirection;
         }
 

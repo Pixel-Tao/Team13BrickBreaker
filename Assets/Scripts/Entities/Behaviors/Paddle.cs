@@ -23,6 +23,7 @@ public class Paddle : Box
     {
         base.Awake();
         Stat = GetComponent<PaddleStat>();
+        GameManager.Instance.OnPlayerClearEvent += StageClear;
     }
     private void Start()
     {
@@ -33,6 +34,11 @@ public class Paddle : Box
     private void Update()
     {
         CheckAliveAndResurrect();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnPlayerClearEvent -= StageClear;
     }
 
     private void CheckAliveAndResurrect()
@@ -100,5 +106,16 @@ public class Paddle : Box
             BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
             ball.PaddleBounce(collision, this);
         }
+    }
+
+    private void StageClear()
+    {
+        for (int i = myBalls.Count - 1; i >= 0; i--)
+        {
+            BounceBall ball = myBalls.ElementAt(i);
+            ball.DestroyBall();
+            RemoveMyBall(ball);
+        }
+        Destroy(gameObject);
     }
 }

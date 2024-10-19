@@ -8,6 +8,10 @@ public class Brick : Box
     public event Action<PlayerType> OnBrickDestroyedEvent;
     [SerializeField][Range(0, 99)] private int hp = 5;
 
+    private void Start()
+    {
+        GameManager.Instance.IncreaseBrick();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

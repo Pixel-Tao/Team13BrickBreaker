@@ -11,13 +11,14 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
 
-    private int selectedLevel = 2;
+    private int selectedLevel = 1;
     private int dropableItemCount = 0;
+    public Stage CurrentStage { get; private set; }
 
-    public float MinX { get; private set; }
-    public float MaxX { get; private set; }
-    public float MinY { get; private set; }
-    public float MaxY { get; private set; }
+    public float ScreenMinX { get; private set; }
+    public float ScreenMaxX { get; private set; }
+    public float ScreenMinY { get; private set; }
+    public float ScreenMaxY { get; private set; }
 
     private static void Init()
     {
@@ -36,13 +37,18 @@ public class GameManager : MonoBehaviour
     public event Action<PlayerType, int> OnScoreChangedEvent;
     public event Action<int> OnStageLoadEvent;
     public event Action<Vector3, int> OnItemDropEvent;
+    public event Action OnIncreaseBrickEvent;
+    public event Action OnDecreaseBrickEvent;
+    public event Action OnPlayerClearEvent;
+
+    public Defines.PlayModeType PlayModeType { get; private set; } = Defines.PlayModeType.Single;
 
     private Dictionary<PlayerType, PlayerData> players;
 
     /// <summary>
     /// 게임 데이터 초기화
     /// </summary>
-    private void GameReset()
+    public void GameReset()
     {
         if (players == null) players = new Dictionary<PlayerType, PlayerData>();
         else players.Clear();
@@ -63,6 +69,11 @@ public class GameManager : MonoBehaviour
     public void LoadStage(int dropableItemCount)
     {
         this.dropableItemCount = dropableItemCount;
+        LoadStage();
+    }
+
+    public void LoadStage()
+    {
         OnStageLoadEvent?.Invoke(selectedLevel);
     }
 
@@ -71,11 +82,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameStart()
     {
-        GameReset();
-
-        PlayerJoin(PlayerType.Player1);
-        //PlayerJoin(PlayerType.Player2);
-
+        if (PlayModeType == Defines.PlayModeType.Single)
+        {
+            PlayerJoin(PlayerType.Player1);
+        }
+        else if (PlayModeType == Defines.PlayModeType.Multi)
+        {
+            PlayerJoin(PlayerType.Player1);
+            PlayerJoin(PlayerType.Player2);
+        }
     }
 
     /// <summary>
@@ -185,7 +200,7 @@ public class GameManager : MonoBehaviour
         if (IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
         // TODO : 게임 오버 처리
-        SceneManager.LoadScene("TitleScene");
+        UIManager.Instance.ShowPopup<GameoverPopup>()?.Init();
     }
 
     /// <summary>
@@ -203,6 +218,11 @@ public class GameManager : MonoBehaviour
         OnPlayerJoinEvent?.Invoke(player);
     }
 
+    public void PlayerClear()
+    {
+        OnPlayerClearEvent?.Invoke();
+    }
+
     public void DropItem(Vector3 pos)
     {
         if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
@@ -211,26 +231,54 @@ public class GameManager : MonoBehaviour
 
     public void SetMinX(float x)
     {
-        this.MinX = x;
+        this.ScreenMinX = x;
     }
 
     public void SetMaxX(float x)
     {
-        this.MaxX = x;
+        this.ScreenMaxX = x;
     }
 
     public void SetMinY(float y)
     {
-        this.MinY = y;
+        this.ScreenMinY = y;
     }
 
     public void SetMaxY(float y)
     {
-        this.MaxY = y;
+        this.ScreenMaxY = y;
     }
 
     public bool IsInGameArea(Vector3 pos)
     {
-        return pos.x >= MinX && pos.x <= MaxX && pos.y >= MinY && pos.y <= MaxY;
+        return pos.x >= ScreenMinX && pos.x <= ScreenMaxX && pos.y >= ScreenMinY && pos.y <= ScreenMaxY;
     }
+
+    public void SetPlayMode(Defines.PlayModeType mode)
+    {
+        this.PlayModeType = mode;
+    }
+
+    public void IncreaseBrick()
+    {
+        OnIncreaseBrickEvent?.Invoke();
+    }
+
+    public void DecreaseBrick()
+    {
+        OnDecreaseBrickEvent?.Invoke();
+    }
+
+    public void SetCurrentStage(Stage stage)
+    {
+        this.CurrentStage = stage;
+    }
+
+    public void StageClear()
+    {
+        // TODO : StageClear 처리
+        selectedLevel++;
+        LoadStage();
+    }
+
 }

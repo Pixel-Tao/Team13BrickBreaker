@@ -16,4 +16,10 @@ public static class Defines
         Paddle2 = 10,
         Item = 11,
     }
+
+    public enum PlayModeType
+    {
+        Single,
+        Multi
+    }
 }

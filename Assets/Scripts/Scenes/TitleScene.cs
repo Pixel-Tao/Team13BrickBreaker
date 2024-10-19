@@ -15,9 +15,14 @@ public class TitleScene : MonoBehaviour
         fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         titleUI = Instantiate(titleUIPrefab).GetComponent<TitleUI>();
 
-        UIManager.Instance.SetEvent(Fade);
+        UIManager.Instance.OnFadeEvent += Fade;
 
         UIManager.Instance.FadeIn();
+    }
+
+    private void OnDestroy()
+    {
+        UIManager.Instance.OnFadeEvent -= Fade;
     }
 
     private void Fade(FadeType fadeType, Action fadedAction)

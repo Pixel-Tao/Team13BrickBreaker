@@ -26,6 +26,8 @@ public class SaveManager : MonoBehaviour
 
     public T Load<T>() where T : class
     {
+        if (PlayerPrefs.HasKey(typeof(T).Name)) return null;
+
         string json = PlayerPrefs.GetString(typeof(T).Name);
         return JsonUtility.FromJson<T>(json);
     }

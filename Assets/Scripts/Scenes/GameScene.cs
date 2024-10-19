@@ -16,11 +16,9 @@ public class GameScene : MonoBehaviour
 
     [SerializeField] private List<GameObject> itemPrefabs;
 
-    [SerializeField] private StageLevelSO stageLevelSO;
+    [SerializeField] private StageSO stageSO;
 
     private GameUI gameUI;
-    private Stage currentStage;
-
     private FadeUI fadeUI;
 
     void Start()
@@ -29,28 +27,30 @@ public class GameScene : MonoBehaviour
         fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
         Instantiate(wallPrefab);
+        
+        SetEvents();
 
-        UIManager.Instance.SetEvent(Fade);
-
-        GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
-        GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
-        GameManager.Instance.OnBallGenerateEvent -= BallGenerate;
-        GameManager.Instance.OnBallGenerateEvent += BallGenerate;
-        GameManager.Instance.OnStageLoadEvent -= LoadStage;
-        GameManager.Instance.OnStageLoadEvent += LoadStage;
-        GameManager.Instance.OnItemDropEvent -= ItemDrop;
-        GameManager.Instance.OnItemDropEvent += ItemDrop;
-
+        GameManager.Instance.GameReset();
         GameManager.Instance.LoadStage(itemPrefabs.Count);
 
         UIManager.Instance.FadeIn(() =>
         {
-            GameManager.Instance.GameStart();
+            // GameStart 함수는 이제 StageStartPopup.cs 에서 호출
+            //GameManager.Instance.GameStart();
 
             //AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
             //AudioManager.Instance.VolumeBgm(0.1f);
             AudioManager.Instance.VolumeSfx(0.1f);
         });
+    }
+
+    private void SetEvents()
+    {
+        UIManager.Instance.OnFadeEvent += Fade;
+        GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
+        GameManager.Instance.OnBallGenerateEvent += BallGenerate;
+        GameManager.Instance.OnStageLoadEvent += LoadStage;
+        GameManager.Instance.OnItemDropEvent += ItemDrop;
     }
 
     private void PlayerJoin(PlayerType playerType)
@@ -82,8 +82,10 @@ public class GameScene : MonoBehaviour
 
     private void LoadStage(int level)
     {
-        GameObject stagePrefab = stageLevelSO.stages[level - 1];
-        currentStage = Instantiate(stagePrefab).GetComponent<Stage>();
+        StageData stageData = stageSO.stages[level - 1];
+        Stage stage = Instantiate(stageData.stagePrefab).GetComponent<Stage>();
+        stage.SetData(stageData);
+        GameManager.Instance.SetCurrentStage(stage);
     }
 
     private void ItemDrop(Vector3 pos, int index)
@@ -95,5 +97,14 @@ public class GameScene : MonoBehaviour
     private void Fade(FadeType fadeType, System.Action fadedAction)
     {
         fadeUI.Play(fadeType, fadedAction);
+    }
+
+    private void OnDestroy()
+    {
+        UIManager.Instance.OnFadeEvent -= Fade;
+        GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
+        GameManager.Instance.OnBallGenerateEvent -= BallGenerate;
+        GameManager.Instance.OnStageLoadEvent -= LoadStage;
+        GameManager.Instance.OnItemDropEvent -= ItemDrop;
     }
 }

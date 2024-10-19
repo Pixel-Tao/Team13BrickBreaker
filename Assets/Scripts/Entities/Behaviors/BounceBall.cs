@@ -33,9 +33,6 @@ public class BounceBall : MonoBehaviour
 
     private void Start()
     {
-        reflect.OnReflectedEvent -= Reflected;
-        reflect.OnReflectedEvent += Reflected;
-
         if (isShooting)
         {
             Shoot();
@@ -147,7 +144,7 @@ public class BounceBall : MonoBehaviour
         GameManager.Instance.BallGenerate(Owner, transform.position);
     }
 
-    private void Reflected(GameObject go)
+    public void Reflected(GameObject go)
     {
         UpdateCrashCount();
         if (go.layer == (int)Defines.ELayerMask.Wall)

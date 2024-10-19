@@ -37,8 +37,8 @@ public class PaddleMovement : MonoBehaviour
         if (direction.x == 0) return;
 
         float harfWidth = boxCollider.bounds.size.x / 2;
-        float maxX = GameManager.Instance.MaxX - harfWidth;
-        float minX = GameManager.Instance.MinX + harfWidth;
+        float maxX = GameManager.Instance.ScreenMaxX - harfWidth;
+        float minX = GameManager.Instance.ScreenMinX + harfWidth;
 
         float nextX = transform.position.x + (movementDirection.x * paddle.speed * Time.deltaTime);
 

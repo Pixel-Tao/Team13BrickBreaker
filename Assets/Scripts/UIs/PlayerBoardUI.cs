@@ -18,6 +18,12 @@ public class PlayerBoardUI : MonoBehaviour
         LifeChanged(playerType, GameManager.Instance.GetLife(playerType));
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnScoreChangedEvent -= ScoreChanged;
+        GameManager.Instance.OnLifeChangedEvent -= LifeChanged;
+    }
+
     private void ScoreChanged(PlayerType type, int value)
     {
         if (playerType != type) return;
