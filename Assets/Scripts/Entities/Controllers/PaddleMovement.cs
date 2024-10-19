@@ -46,14 +46,6 @@ public class PaddleMovement : MonoBehaviour
 
         transform.position = new Vector3(nextX, transform.position.y, transform.position.z);
 
-        //if (transform.position.x > GameManager.Instance.MinX
-        //    && transform.position.x < GameManager.Instance.MaxX)
-        //{
-        //    Vector3 move = new Vector3(movementDirection.x, 0, 0) * paddle.speed * Time.deltaTime;
-        //    transform.position += move;
-        //}
-
-        //rigidbody.velocity = movementDirection * paddle.speed;
     }
 
 }

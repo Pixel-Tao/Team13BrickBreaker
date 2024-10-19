@@ -47,9 +47,9 @@ public class GameScene : MonoBehaviour
         {
             GameManager.Instance.GameStart();
 
-            AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
-            AudioManager.Instance.VolumeBgm(0.1f);
-            AudioManager.Instance.VolumeSfx(0.5f);
+            //AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
+            //AudioManager.Instance.VolumeBgm(0.1f);
+            AudioManager.Instance.VolumeSfx(0.1f);
         });
     }
 

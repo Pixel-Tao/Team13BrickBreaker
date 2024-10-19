@@ -13,7 +13,14 @@ public enum WallType
 
 public class Wall : MonoBehaviour
 {
-    [SerializeField] private WallType wallType = WallType.None;
+    public WallType wallType = WallType.None;
+
+    private BoxCollider2D boxCollider;
+
+    private void Awake()
+    {
+        boxCollider = GetComponent<BoxCollider2D>();
+    }
 
     private void Start()
     {
@@ -33,16 +40,7 @@ public class Wall : MonoBehaviour
         if (rb != null && collision.gameObject.CompareTag("Ball"))
         {
             BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
-            if (wallType == WallType.Bottom)
-            {
-                // 공 파괴
-                ball?.DestroyBall();
-            }
-            else
-            {
-                ball?.WallBounce(collision, wallType);
-                AudioManager.Instance.PlaySfx(AudioClipType.wall_bounce);
-            }
+            ball?.WallBounce(collision, boxCollider);
         }
     }
 }

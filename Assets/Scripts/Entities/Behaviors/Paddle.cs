@@ -91,4 +91,13 @@ public class Paddle : MonoBehaviour
     {
         return myBalls.FirstOrDefault();
     }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ball"))
+        {
+            BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
+            ball.PaddleBounce(collision, this);
+        }
+    }
 }

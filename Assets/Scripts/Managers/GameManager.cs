@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         GameReset();
 
         PlayerJoin(PlayerType.Player1);
-        PlayerJoin(PlayerType.Player2);
+        //PlayerJoin(PlayerType.Player2);
 
     }
 

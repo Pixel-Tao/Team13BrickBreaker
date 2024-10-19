@@ -1,15 +1,18 @@
 using System;
+using System.Reflection;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BounceBall : MonoBehaviour
 {
     [SerializeField] private int crashCount = 0;
     [SerializeField] private bool isShooting = false;
-    public Vector2 direction;
 
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
     private BounceBallDestroy ballDestroy;
+    private BounceBallReflect reflect;
+    private BounceBallMovement movement;
 
     //발사시, 무작위로 발사될 각도 값의 배열
     private float[] paddleRandomAngles = { -30, -45, -60, 60, 45, 30 };
@@ -23,11 +26,16 @@ public class BounceBall : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         ballDestroy = GetComponent<BounceBallDestroy>();
         Stat = GetComponent<BounceBallStat>();
+        reflect = GetComponent<BounceBallReflect>();
+        movement = GetComponent<BounceBallMovement>();
     }
 
     private void Start()
     {
-        if(isShooting)
+        reflect.OnReflectedEvent -= Reflected;
+        reflect.OnReflectedEvent += Reflected;
+
+        if (isShooting)
         {
             Shoot();
         }
@@ -35,24 +43,14 @@ public class BounceBall : MonoBehaviour
 
     private void Update()
     {
-        FollowOwner();
-    }
-
-    private void FixedUpdate()
-    {
-        if (isShooting && rb2d.velocity != Vector2.zero)
-        {
-            direction = rb2d.velocity;
-        }
+        if (Owner != null && isShooting == false)
+            FollowOwner();
     }
 
     private void FollowOwner()
     {
-        if (Owner != null && isShooting == false)
-        {
-            Vector2 ownerPos = new Vector2(Owner.transform.position.x, Owner.transform.position.y + 0.3f);
-            transform.position = ownerPos;
-        }
+        Vector2 ownerPos = new Vector2(Owner.transform.position.x, Owner.transform.position.y + 0.3f);
+        transform.position = ownerPos;
     }
 
     public void SetInfo(Paddle owner)
@@ -91,58 +89,41 @@ public class BounceBall : MonoBehaviour
 
     public void Shoot()
     {
-        isShooting = true;
         float bounceAngle = paddleRandomAngles[UnityEngine.Random.Range(0, paddleRandomAngles.Length)]; //랜덤 값이 반영된다.
-        Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
-        rb2d.velocity = direction.normalized * Stat.CurrentBallStat.ballSpeed;
-        Owner.OnShootEvent -= Shoot;
-        AudioManager.Instance.PlaySfx(AudioClipType.shoot);
-    }
-
-    public void BrickBounce(Collision2D ballCollision)
-    {
-        WallBounce(ballCollision);
-    }
-
-    public void WallBounce(Collision2D ballCollision, WallType wall = WallType.None)
-    {
-        // 충돌한 표면의 법선 벡터
-        Vector2 normal = ballCollision.contacts[0].normal * -1;
-        // 공의 현재 이동 벡터 (입사 벡터)
-        Vector2 incomingVector = direction;
-        // 반사 벡터 계산
-        Vector2 reflectVector = Vector2.Reflect(incomingVector, normal);
-
-        reflectVector = reflectVector.normalized * Stat.CurrentBallStat.ballSpeed;
-
-        // 반사 벡터로 공의 속도 변경
-        rb2d.velocity = reflectVector;
-        UpdateCrashCount();
-    }
-
-    public void PaddleBounce(Collision2D ballCollision, Paddle paddle)
-    {
-        // 패들의 중앙을 기준으로 공이 충돌한 위치 계산
-        BoxCollider2D paddleCollider = paddle.GetComponent<BoxCollider2D>();
-        Vector3 paddlePosition = paddle.transform.position;
-        Vector3 contactPoint = ballCollision.GetContact(0).point;
-        float paddleWidth = paddleCollider.bounds.size.x;
-
-        // 충돌 지점의 상대적 위치 (-1: 왼쪽 끝, 0: 중앙, 1: 오른쪽 끝)
-        float relativeHitPosition = (contactPoint.x - paddlePosition.x) / paddleWidth;
-
-        // 충돌 위치에 따른 각도 계산
-        float bounceAngle = relativeHitPosition * paddle.bounceAngleRange;
-
-        // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
-        Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
+        Vector3 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
         direction = direction.normalized;
 
-        // 공의 속도를 기존 속도 크기에 맞춰 반사
-        rb2d.velocity = direction * Stat.CurrentBallStat.ballSpeed;
-        UpdateCrashCount();
+        //Vector3 vector = direction.normalized * Stat.CurrentBallStat.ballSpeed;
+
+        movement.Move(direction);
+
+        Owner.OnShootEvent -= Shoot;
+        AudioManager.Instance.PlaySfx(AudioClipType.shoot);
+        isShooting = true;
     }
 
+    public void BrickBounce(Collision2D ballCollision, Collider2D brickCollider)
+    {
+        if (reflect.reflectType == BallReflectType.OnCollisionReflect)
+            reflect.BrickReflectBounce(ballCollision, brickCollider);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
+            reflect.BrickPhisicsBounce(ballCollision, brickCollider);
+    }
+
+    public void WallBounce(Collision2D ballCollision, Collider2D wallCollider)
+    {
+        if (reflect.reflectType == BallReflectType.OnCollisionReflect)
+            reflect.WallReflectBounce(ballCollision, wallCollider);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
+            reflect.WallPhisicsBounce(ballCollision, wallCollider);
+    }
+    public void PaddleBounce(Collision2D ballCollision, Paddle paddle)
+    {
+        if (reflect.reflectType == BallReflectType.OnCollisionReflect)
+            reflect.PaddleReflectBounce(ballCollision, paddle);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
+            reflect.PaddlePhisicsBounce(ballCollision, paddle);
+    }
     public void UpdateCrashCount()
     {
         crashCount += 1;
@@ -166,5 +147,29 @@ public class BounceBall : MonoBehaviour
     {
         // 공 생성
         GameManager.Instance.BallGenerate(Owner, transform.position);
+    }
+
+    private void Reflected(GameObject go)
+    {
+        UpdateCrashCount();
+        if (go.layer == (int)Defines.ELayerMask.Wall)
+        {
+            Wall wall = go.GetComponent<Wall>();
+            AudioManager.Instance.PlaySfx(AudioClipType.wall_bounce);
+            if (wall.wallType == WallType.Bottom)
+            {
+                DestroyBall();
+            }
+        }
+        else if (go.layer == (int)Defines.ELayerMask.Paddle1 || go.layer == (int)Defines.ELayerMask.Paddle2)
+        {
+            AudioManager.Instance.PlaySfx(AudioClipType.paddle_bounce);
+        }
+        else if (go.layer == (int)Defines.ELayerMask.Brick)
+        {
+            Brick brick = go.GetComponent<Brick>();
+            brick.OnDamaged(this, Stat.CurrentBallStat.ballPower);
+            AudioManager.Instance.PlaySfx(AudioClipType.brick_bounce);
+        }
     }
 }
