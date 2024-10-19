@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour
+public class Paddle : Box
 {
     public event Action<Vector2> OnMoveEvent;
     public event Action<float> OnLookEvent;
@@ -19,8 +19,9 @@ public class Paddle : MonoBehaviour
     private float[] arrAngles = { -30, -45, -60, 60, 45, 30 }; //발사시, 무작위로 발사될 각도 값의 배열
     private HashSet<BounceBall> myBalls = new HashSet<BounceBall>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Stat = GetComponent<PaddleStat>();
     }
     private void Start()

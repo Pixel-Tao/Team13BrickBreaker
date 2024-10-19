@@ -11,16 +11,9 @@ public enum WallType
     Right
 }
 
-public class Wall : MonoBehaviour
+public class Wall : Box
 {
     public WallType wallType = WallType.None;
-
-    private BoxCollider2D boxCollider;
-
-    private void Awake()
-    {
-        boxCollider = GetComponent<BoxCollider2D>();
-    }
 
     private void Start()
     {
@@ -29,6 +22,10 @@ public class Wall : MonoBehaviour
             GameManager.Instance.SetMinX(transform.position.x + (boxCollider.bounds.size.x / 2));
         else if (wallType == WallType.Right)
             GameManager.Instance.SetMaxX(transform.position.x - (boxCollider.bounds.size.x / 2));
+        else if (wallType == WallType.Bottom)
+            GameManager.Instance.SetMinY(transform.position.y + (boxCollider.bounds.size.y / 2));
+        else if (wallType == WallType.Top)
+            GameManager.Instance.SetMaxY(transform.position.y - (boxCollider.bounds.size.y / 2));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

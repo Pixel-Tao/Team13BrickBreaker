@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BounceBallMovement : MonoBehaviour
 {
@@ -34,7 +35,19 @@ public class BounceBallMovement : MonoBehaviour
     private void DetectAndMove()
     {
         direction = reflect.ReflectDirection(direction);
-        transform.position += ball.Stat.CurrentBallStat.ballSpeed * direction * Time.deltaTime;
+        Vector3 nextPosition = transform.position + ball.Stat.CurrentBallStat.ballSpeed * direction * Time.deltaTime;
+        if (!GameManager.Instance.IsInGameArea(nextPosition))
+        {
+            // direction 이 왼쪽으로 가는지 오른쪽으로 가는지 확인
+            if (direction.x > 0)
+                direction = Quaternion.Euler(0, 0, -90) * direction;
+            else
+                direction = Quaternion.Euler(0, 0, 90) * direction;
+            // 화면 밖으로 나가지 않도록 하기 위해 위치 보정
+            nextPosition = transform.position + ball.Stat.CurrentBallStat.ballSpeed * direction * Time.deltaTime;
+        }
+
+        transform.position = nextPosition;
     }
 
     private void ReflectMove()
@@ -57,6 +70,6 @@ public class BounceBallMovement : MonoBehaviour
         if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
             rb2d.velocity = vector;
         else
-            this.direction = vector;
+            this.direction = vector.normalized;
     }
 }

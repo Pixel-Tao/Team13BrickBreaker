@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public float MinX { get; private set; }
     public float MaxX { get; private set; }
+    public float MinY { get; private set; }
+    public float MaxY { get; private set; }
 
     private static void Init()
     {
@@ -35,14 +37,16 @@ public class GameManager : MonoBehaviour
     public event Action<int> OnStageLoadEvent;
     public event Action<Vector3, int> OnItemDropEvent;
 
-    private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
+    private Dictionary<PlayerType, PlayerData> players;
 
     /// <summary>
     /// 게임 데이터 초기화
     /// </summary>
     private void GameReset()
     {
-        players.Clear();
+        if (players == null) players = new Dictionary<PlayerType, PlayerData>();
+        else players.Clear();
+
         for (int i = 0; i < Enum.GetValues(typeof(PlayerType)).Length; i++)
         {
             PlayerType playerType = (PlayerType)i;
@@ -213,5 +217,20 @@ public class GameManager : MonoBehaviour
     public void SetMaxX(float x)
     {
         this.MaxX = x;
+    }
+
+    public void SetMinY(float y)
+    {
+        this.MinY = y;
+    }
+
+    public void SetMaxY(float y)
+    {
+        this.MaxY = y;
+    }
+
+    public bool IsInGameArea(Vector3 pos)
+    {
+        return pos.x >= MinX && pos.x <= MaxX && pos.y >= MinY && pos.y <= MaxY;
     }
 }

@@ -3,16 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Brick : MonoBehaviour
+public class Brick : Box
 {
     public event Action<PlayerType> OnBrickDestroyedEvent;
     [SerializeField][Range(0, 99)] private int hp = 5;
 
-    private BoxCollider2D boxCollider;
-    private void Awake()
-    {
-        boxCollider = GetComponent<BoxCollider2D>();
-    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

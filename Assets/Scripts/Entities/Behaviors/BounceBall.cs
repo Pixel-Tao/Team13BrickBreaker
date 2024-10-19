@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -91,12 +92,8 @@ public class BounceBall : MonoBehaviour
     {
         float bounceAngle = paddleRandomAngles[UnityEngine.Random.Range(0, paddleRandomAngles.Length)]; //랜덤 값이 반영된다.
         Vector3 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
-        direction = direction.normalized;
-
-        //Vector3 vector = direction.normalized * Stat.CurrentBallStat.ballSpeed;
-
+        direction = direction.normalized * Stat.CurrentBallStat.ballSpeed;
         movement.Move(direction);
-
         Owner.OnShootEvent -= Shoot;
         AudioManager.Instance.PlaySfx(AudioClipType.shoot);
         isShooting = true;
@@ -124,6 +121,7 @@ public class BounceBall : MonoBehaviour
         else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
             reflect.PaddlePhisicsBounce(ballCollision, paddle);
     }
+
     public void UpdateCrashCount()
     {
         crashCount += 1;

@@ -25,7 +25,7 @@ public class BounceBallStat : MonoBehaviour
 
     public void IncreaseSpeed()
     {
-        if (maxBallSpeed < CurrentBallStat.ballSpeed)
+        if (maxBallSpeed > CurrentBallStat.ballSpeed)
             CurrentBallStat.ballSpeed += CurrentBallStat.ballSpeedIncrement;
     }
 

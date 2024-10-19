@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
@@ -22,10 +23,18 @@ public class BounceBallReflect : MonoBehaviour
     private BounceBall ball;
     private BounceBallMovement movement;
     private float layDistance = 1f;
-    private float randBounceAngle = 1f;
+    private float randBounceAngle = 10f;
 
+    // 공의 충돌 기준 거리
     private float minReflectDistance = 0.005f;
-    private float colliderDetectRange = 1.5f;
+    // 공 주변 collder 감지 범위
+    private float colliderDetectRangeRatio = 1.5f;
+    // 평행 임계값 (평행 각도 방지)
+    private float parallelThreshold = 0.95f;
+    // 직교 임계값 (수직 각도 방지)
+    private float orthogonalThreshold = 0f;
+    // 충돌이 일어나고 있는지 확인
+    private bool isReflecting = false;
 
     private void Awake()
     {
@@ -46,9 +55,13 @@ public class BounceBallReflect : MonoBehaviour
     {
         //isPhisics true일 경우 Rigidbody2D 사용
         rb2d.constraints =
-            reflectType == BallReflectType.OnCollisionPhisics ?
+            reflectType != BallReflectType.OnCollisionPhisics ?
             RigidbodyConstraints2D.FreezeAll :
             RigidbodyConstraints2D.None;
+
+        // DetectAndRefelct 이면 Collider event를 발생 시킬 이유가 없음.
+        if (reflectType == BallReflectType.DetectAndRefelct)
+            circleCollider.excludeLayers = includeRayLayerMask;
     }
 
     #region 물리엔진 사용
@@ -65,6 +78,13 @@ public class BounceBallReflect : MonoBehaviour
         Vector2 incomingVector = movement.velocity;
         // 반사 벡터 계산
         Vector2 reflectVector = Vector2.Reflect(incomingVector, normal);
+
+        float dotProduct = Mathf.Abs(Vector2.Dot(incomingVector, reflectVector));
+        if (dotProduct >= parallelThreshold || dotProduct <= orthogonalThreshold)
+        {
+            float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
+            reflectVector = Quaternion.Euler(0, 0, additionalBounceAngle) * reflectVector;
+        }
 
         reflectVector = reflectVector.normalized * ball.Stat.CurrentBallStat.ballSpeed;
 
@@ -89,10 +109,10 @@ public class BounceBallReflect : MonoBehaviour
 
         // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
         Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
-        direction = direction.normalized;
+        direction = direction.normalized * ball.Stat.CurrentBallStat.ballSpeed;
         OnReflectedEvent?.Invoke(paddle.gameObject);
         // 공의 속도를 기존 속도 크기에 맞춰 반사
-        movement.Move(direction * ball.Stat.CurrentBallStat.ballSpeed);
+        movement.Move(direction);
     }
     #endregion
 
@@ -103,14 +123,17 @@ public class BounceBallReflect : MonoBehaviour
     }
     public void WallReflectBounce(Collision2D ballCollision, Collider2D wallCollder)
     {
-        float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
         Vector3 hitNormal = ballCollision.contacts[0].normal;
-        Vector3 direction = Vector3.Reflect(movement.direction, hitNormal);
-        direction = direction.normalized;
-        Quaternion rotation = Quaternion.Euler(0, 0, additionalBounceAngle);
-        direction = rotation * direction;
+        Vector3 nextDirection = Vector3.Reflect(movement.direction, hitNormal);
+        float dotProduct = Mathf.Abs(Vector3.Dot(nextDirection, hitNormal));
+        if (dotProduct >= parallelThreshold || dotProduct <= orthogonalThreshold)
+        {
+            float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
+            nextDirection = Quaternion.Euler(0, 0, additionalBounceAngle) * nextDirection;
+        }
+        nextDirection = nextDirection.normalized;
         OnReflectedEvent?.Invoke(wallCollder.gameObject);
-        movement.Move(direction);
+        movement.Move(nextDirection);
     }
     public void PaddleReflectBounce(Collision2D ballCollision, Paddle paddle)
     {
@@ -134,35 +157,52 @@ public class BounceBallReflect : MonoBehaviour
     #endregion
 
     #region 직접충돌 여부 확인해서 이동
-    public Vector3 ReflectDirection(Vector3 defaultDirection)
+    public Vector3 ReflectDirection(Vector3 prevDirection)
     {
-        float contactDistance = float.MaxValue;
-        Collider2D contactCollider = GetContentCollider(out contactDistance);
+        Collider2D contactCollider = GetContactCollider();
 
-        if (contactCollider != null && contactDistance <= minReflectDistance)
+        if (contactCollider != null)
         {
             Vector2 pos = transform.position;
             Vector3 hitNormal = (contactCollider.ClosestPoint(transform.position) - pos).normalized;
-            float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
-            Vector3 direction = Vector3.Reflect(defaultDirection, hitNormal);
-            direction = Quaternion.Euler(0, 0, additionalBounceAngle) * direction;
+            Vector3 nextDirection = Vector3.Reflect(prevDirection, hitNormal);
+
+            // 공의 방향이 벽이나 벽돌과 평행에 가까운지 확인
+            float dotProduct = Mathf.Abs(Vector3.Dot(nextDirection, hitNormal));
+            if (dotProduct >= parallelThreshold || dotProduct <= orthogonalThreshold)
+            {
+                // 평행에 가깝거나 직교에 가까울수록 추가적인 반사 각도를 적용 (예: -10도~10도)
+                float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
+                nextDirection = Quaternion.Euler(0, 0, additionalBounceAngle) * nextDirection;
+                nextDirection = nextDirection.normalized;
+                Debug.Log($"ball direction : {prevDirection} -> {nextDirection} (dot:{dotProduct})");
+            }
+            else
+            {
+                nextDirection = nextDirection.normalized;
+                Debug.Log($"ball direction : {prevDirection} -> {nextDirection}");
+            }
             OnReflectedEvent?.Invoke(contactCollider.gameObject);
-            return direction.normalized;
+            return nextDirection;
         }
 
-        return defaultDirection;
+        return prevDirection;
     }
 
-    private Collider2D GetContentCollider(out float contactDistance)
+    private Collider2D GetContactCollider()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, circleCollider.radius * 1.5f, includeRayLayerMask);
-        contactDistance = float.MaxValue;
+        float contactDistance = float.MaxValue;
         Collider2D contactCollider = null;
         foreach (Collider2D collider in colliders)
         {
+            Box box = collider.GetComponent<Box>();
+            
             Vector3 hitPostion = collider.ClosestPoint(transform.position);
+            if (!box.AllowBoxContact(hitPostion)) continue;
+
             float dist = RayTargetDistance(transform.position, hitPostion, circleCollider.radius);
-            if (dist < contactDistance)
+            if (dist < contactDistance && dist <= minReflectDistance)
             {
                 contactDistance = dist;
                 contactCollider = collider;
@@ -192,6 +232,7 @@ public class BounceBallReflect : MonoBehaviour
 
         return float.MaxValue;
     }
+
     #endregion
 
     private void OnDrawGizmos()
@@ -199,6 +240,6 @@ public class BounceBallReflect : MonoBehaviour
         if (movement == null || circleCollider == null) return;
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, movement.direction * layDistance);
-        Gizmos.DrawWireSphere(transform.position, circleCollider.radius * colliderDetectRange);
+        Gizmos.DrawWireSphere(transform.position, circleCollider.radius * colliderDetectRangeRatio);
     }
 }
