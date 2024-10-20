@@ -11,14 +11,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { Init(); return _instance; } }
 
-    private int selectedLevel = 1;
     private int dropableItemCount = 0;
-    public Stage CurrentStage { get; private set; }
-
-    public float ScreenMinX { get; private set; }
-    public float ScreenMaxX { get; private set; }
-    public float ScreenMinY { get; private set; }
-    public float ScreenMaxY { get; private set; }
 
     private static void Init()
     {
@@ -35,10 +28,7 @@ public class GameManager : MonoBehaviour
     public event Action<Paddle, Vector3?> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
-    public event Action<int> OnStageLoadEvent;
     public event Action<Vector3, int> OnItemDropEvent;
-    public event Action OnIncreaseBrickEvent;
-    public event Action OnDecreaseBrickEvent;
     public event Action OnPlayerClearEvent;
 
     public Defines.PlayModeType PlayModeType { get; private set; } = Defines.PlayModeType.Single;
@@ -48,7 +38,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 게임 데이터 초기화
     /// </summary>
-    public void GameReset()
+    public void PlayerReset()
     {
         if (players == null) players = new Dictionary<PlayerType, PlayerData>();
         else players.Clear();
@@ -66,15 +56,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadStage(int dropableItemCount)
+    public void ClearEvent()
+    {
+        OnPlayerJoinEvent = null;
+        OnBallGenerateEvent = null;
+        OnItemDropEvent = null;
+    }
+    public void InitGame(int dropableItemCount)
     {
         this.dropableItemCount = dropableItemCount;
-        LoadStage();
-    }
-
-    public void LoadStage()
-    {
-        OnStageLoadEvent?.Invoke(selectedLevel);
     }
 
     /// <summary>
@@ -199,7 +189,12 @@ public class GameManager : MonoBehaviour
     {
         if (IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
-        // TODO : 게임 오버 처리
+        UIManager.Instance.ShowPopup<GameoverPopup>()?.Init();
+    }
+
+    public void Ending()
+    {
+        // TODO : 엔딩은 어떻게..?
         UIManager.Instance.ShowPopup<GameoverPopup>()?.Init();
     }
 
@@ -229,6 +224,17 @@ public class GameManager : MonoBehaviour
         OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
     }
 
+    public void SetPlayMode(Defines.PlayModeType mode)
+    {
+        this.PlayModeType = mode;
+    }
+
+    #region Screen Area
+    public float ScreenMinX { get; private set; }
+    public float ScreenMaxX { get; private set; }
+    public float ScreenMinY { get; private set; }
+    public float ScreenMaxY { get; private set; }
+
     public void SetMinX(float x)
     {
         this.ScreenMinX = x;
@@ -253,32 +259,5 @@ public class GameManager : MonoBehaviour
     {
         return pos.x >= ScreenMinX && pos.x <= ScreenMaxX && pos.y >= ScreenMinY && pos.y <= ScreenMaxY;
     }
-
-    public void SetPlayMode(Defines.PlayModeType mode)
-    {
-        this.PlayModeType = mode;
-    }
-
-    public void IncreaseBrick()
-    {
-        OnIncreaseBrickEvent?.Invoke();
-    }
-
-    public void DecreaseBrick()
-    {
-        OnDecreaseBrickEvent?.Invoke();
-    }
-
-    public void SetCurrentStage(Stage stage)
-    {
-        this.CurrentStage = stage;
-    }
-
-    public void StageClear()
-    {
-        // TODO : StageClear 처리
-        selectedLevel++;
-        LoadStage();
-    }
-
+    #endregion
 }

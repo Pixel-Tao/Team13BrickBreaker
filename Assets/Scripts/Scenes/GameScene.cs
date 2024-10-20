@@ -30,26 +30,29 @@ public class GameScene : MonoBehaviour
         
         SetEvents();
 
-        GameManager.Instance.GameReset();
-        GameManager.Instance.LoadStage(itemPrefabs.Count);
+        // 게임 정보 초기화
+        GameManager.Instance.InitGame(itemPrefabs.Count);
+        // 스테이지 정보 초기화
+        StageManager.Instance.InitStage(stageSO);
+        // 플레이어 데이터 리셋
+        GameManager.Instance.PlayerReset();
+        // 게임 스테이지 불러오기 -> 게임 시작됨
+        StageManager.Instance.LoadStage();
+        // 사운드 플레이
+        AudioManager.Instance.Play();
 
-        UIManager.Instance.FadeIn(() =>
-        {
-            // GameStart 함수는 이제 StageStartPopup.cs 에서 호출
-            //GameManager.Instance.GameStart();
-
-            //AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
-            //AudioManager.Instance.VolumeBgm(0.1f);
-            AudioManager.Instance.VolumeSfx(0.1f);
-        });
+        UIManager.Instance.FadeIn();
     }
 
     private void SetEvents()
     {
+        StageManager.Instance?.ClearEvent();
+        UIManager.Instance?.ClearEvent();
+        GameManager.Instance?.ClearEvent();
+
         UIManager.Instance.OnFadeEvent += Fade;
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
-        GameManager.Instance.OnStageLoadEvent += LoadStage;
         GameManager.Instance.OnItemDropEvent += ItemDrop;
     }
 
@@ -80,14 +83,6 @@ public class GameScene : MonoBehaviour
             ball.GetComponent<BounceBall>().SetInfo(owner);
     }
 
-    private void LoadStage(int level)
-    {
-        StageData stageData = stageSO.stages[level - 1];
-        Stage stage = Instantiate(stageData.stagePrefab).GetComponent<Stage>();
-        stage.SetData(stageData);
-        GameManager.Instance.SetCurrentStage(stage);
-    }
-
     private void ItemDrop(Vector3 pos, int index)
     {
         GameObject item = Instantiate(itemPrefabs[index]);
@@ -97,14 +92,5 @@ public class GameScene : MonoBehaviour
     private void Fade(FadeType fadeType, System.Action fadedAction)
     {
         fadeUI.Play(fadeType, fadedAction);
-    }
-
-    private void OnDestroy()
-    {
-        UIManager.Instance.OnFadeEvent -= Fade;
-        GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
-        GameManager.Instance.OnBallGenerateEvent -= BallGenerate;
-        GameManager.Instance.OnStageLoadEvent -= LoadStage;
-        GameManager.Instance.OnItemDropEvent -= ItemDrop;
     }
 }

@@ -138,4 +138,12 @@ public class AudioManager : MonoBehaviour
         else
             Sfx.UnPause();
     }
+
+    public void Play()
+    {
+        PlayBgm(AudioClipType.bgm1);
+        SaveSettingData settingData = SaveManager.Instance.Load<SaveSettingData>();
+        VolumeBgm(settingData.bgmVolume);
+        VolumeSfx(settingData.sfxVolume);
+    }
 }

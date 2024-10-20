@@ -22,7 +22,6 @@ public class Box : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
     }
 
-
     public bool AllowBoxContact(Vector3 hitPosition)
     {
         if (allowBoxContactType == BoxContactType.All)

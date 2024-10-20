@@ -81,22 +81,21 @@ public class GameoverPopup : PopupBase
     {
         string name = slot.GetInputName();
         SaveScoreDataList data = SaveManager.Instance.Load<SaveScoreDataList>();
-        if (data == null) data = new SaveScoreDataList();
 
-        if (data.list.Count >= 10)
-            data.list.RemoveAt(data.list.Count - 1);
+        if (data.scores.Count >= 10)
+            data.scores.RemoveAt(data.scores.Count - 1);
 
         SaveScoreData saveScoreData = new SaveScoreData
         {
             name = name,
             score = GameManager.Instance.GetScore(slot.playerType),
-            date = System.DateTime.Now,
+            dateTimeText = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             playerType = slot.playerType
         };
 
-        data.list.Add(saveScoreData);
+        data.scores.Add(saveScoreData);
 
-        data.list = data.list.OrderByDescending(s => s.score).ToList();
+        data.scores = data.scores.OrderByDescending(s => s.score).ToList();
         SaveManager.Instance.Save(data);
     }
 }

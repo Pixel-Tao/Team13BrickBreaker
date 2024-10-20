@@ -24,6 +24,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ClearEvent()
+    {
+        OnFadeEvent = null;
+    }
+
     public void FadeIn(Action fadedAction = null)
     {
         // 검은 화면이 점점 밝아지는 효과
@@ -55,7 +60,9 @@ public class UIManager : MonoBehaviour
 
     public void ClosePopup<T>() where T : PopupBase
     {
-        if (popups.TryGetValue(typeof(T).Name, out PopupBase popupBase))
+        Type type = typeof(T);
+
+        if (popups.TryGetValue(type.Name, out PopupBase popupBase))
         {
             popupBase.gameObject.SetActive(false);
         }
@@ -63,6 +70,9 @@ public class UIManager : MonoBehaviour
 
     public void ClosePopup<T>(T popup) where T : PopupBase
     {
-        ClosePopup<T>();
+        if (popups.TryGetValue(popup.GetType().Name, out PopupBase popupBase))
+        {
+            popupBase.gameObject.SetActive(false);
+        }
     }
 }

@@ -34,8 +34,9 @@ public class BrickDestory : MonoBehaviour
         Destroy(gameObject, 1f);
 
         AudioManager.Instance.PlaySfx(AudioClipType.brick_break);
-        GameManager.Instance.AddScrore(playerType, 100);
+        GameManager.Instance.AddScrore(playerType, 300);
         GameManager.Instance.DropItem(transform.position);
-        GameManager.Instance.DecreaseBrick();
+        StageManager.Instance.DecreaseBrickCount();
+        StageManager.Instance.TryStageClear();
     }
 }

@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class PopupBase : MonoBehaviour
 {
-    public void CloseButtonClick()
+    public virtual void CloseButtonClick()
     {
         UIManager.Instance.ClosePopup(this);
+    }
+
+    public virtual void LoadData()
+    {
+
     }
 }

@@ -25,22 +25,16 @@ public class TitleUI : MonoBehaviour
 
     public void ShowScoreBoard()
     {
-        // TODO : ScoreBoard UI 띄우기
-        Debug.Log("Show ScoreBoard");
-        UIManager.Instance.ShowPopup<ScoreBoardPopup>();
+        UIManager.Instance.ShowPopup<ScoreBoardPopup>()?.LoadData();
     }
 
     public void ShowArchievement()
     {
-        // TODO : Archievement UI 띄우기
-        Debug.Log("Show Archievement");
-        UIManager.Instance.ShowPopup<AchievementPopup>();
+        UIManager.Instance.ShowPopup<AchievementPopup>()?.LoadData();
     }
 
     public void ShowSetting()
     {
-        // TODO : Setting UI 띄우기
-        Debug.Log("Show Setting");
-        UIManager.Instance.ShowPopup<SettingPopup>();
+        UIManager.Instance.ShowPopup<SettingPopup>()?.LoadData();
     }
 }

@@ -9,5 +9,16 @@ public class StageClearPopup : PopupBase
     public void SetStage(StageData stageData)
     {
         stageText.text = $"Stage {stageData.stage} Clear!";
+        AutoClose();
+    }
+    private void AutoClose()
+    {
+        Invoke("Close", 1f);
+    }
+
+    private void Close()
+    {
+        UIManager.Instance.ClosePopup(this);
+        StageManager.Instance.LoadStage();
     }
 }

@@ -7,12 +7,12 @@ public class SaveScoreData
 {
     public string name;
     public int score;
-    public DateTime date;
+    public string dateTimeText;
     public PlayerType playerType;
 }
 
 [Serializable]
 public class SaveScoreDataList
 {
-    public List<SaveScoreData> list = new List<SaveScoreData>();
+    public List<SaveScoreData> scores = new List<SaveScoreData>();
 }
