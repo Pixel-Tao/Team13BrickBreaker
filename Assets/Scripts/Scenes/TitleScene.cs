@@ -23,7 +23,7 @@ public class TitleScene : MonoBehaviour
         UIManager.Instance.OnFadeEvent += Fade;
 
         UIManager.Instance.FadeIn();
-        AudioManager.Instance.Title();
+        AudioManager.Instance.TitlePlay();
     }
 
     private void Fade(FadeType fadeType, Action fadedAction)
