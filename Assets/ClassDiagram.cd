@@ -1,137 +1,151 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="GameManager">
-    <Position X="2.5" Y="2.5" Width="2.25" />
+  <Class Name="Item">
+    <Position X="5.5" Y="6.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>ASkEAACAAAACAAAAgAIAAAAgAEAQAAAIYAAGjAABAAA=</HashCode>
-      <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Items\Item.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PlayerBoardUI">
-    <Position X="6.5" Y="6.25" Width="1.5" />
+  <Class Name="BallSpeedDownItem">
+    <Position X="5.5" Y="8.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAQAAAAAAAABAAAAAAAAAAAAAAEAAAYA=</HashCode>
-      <FileName>Assets\Scripts\UIs\PlayerBoardUI.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Items\BallSpeedDownItem.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GameUI">
-    <Position X="8.25" Y="6.25" Width="1.5" />
+  <Class Name="BallPowerUpItem">
+    <Position X="7.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>wAAAAAAAACAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\UIs\SceneUI\GameUI.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Items\BallPowerUpItem.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GameScene">
-    <Position X="7.25" Y="2" Width="1.75" />
+  <Class Name="BallMultipleAddItem">
+    <Position X="7.75" Y="7.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAgAAAIABAAAQEAAQAAAAAAAQDAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Scenes\GameScene.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAgA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Items\BallMultipleAddItem.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TitleScene">
-    <Position X="5.5" Y="2" Width="1.5" />
+  <Class Name="Box">
+    <Position X="11.25" Y="2" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAQACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Scenes\TitleScene.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="PaddleInput">
-    <Position X="6.5" Y="10" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAgAAAAAAAAAAAAAAABAAAAAAgBAAAgAAAEA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Controllers\PaddleInput.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="PaddleMovement">
-    <Position X="8.25" Y="10" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAIAAAAAqAAIAAAgAAAAAAAAAAAAAAAAAAAAgAAAEA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Controllers\PaddleMovement.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Wall">
-    <Position X="13.25" Y="10" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\Wall.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TitleUI">
-    <Position X="10" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\UIs\SceneUI\TitleUI.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Ball">
-    <Position X="13.25" Y="14.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAQAAQAAAAAAAAAAAAAAAAAAAEAAAAAAAAIAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\Ball.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BounceBall">
-    <Position X="19.75" Y="10" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AQQAAhCBAgAApGAAAAAAAAEAAAAABRAAAAgAAGAAAEA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\BounceBall.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BounceBallDestroy">
-    <Position X="19.75" Y="16" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\BounceBallDestroy.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAIAAAAAAAAAAAAAAIAAEA=</HashCode>
+      <FileName>Assets\Scripts\Entities\Behaviors\Box.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Brick">
-    <Position X="15.25" Y="10" Width="2" />
+    <Position X="10.25" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAABgAAAAgAA=</HashCode>
+      <HashCode>AAAAAAAABCAAAAAABAAAAAAAAAAAAAAAAABgCAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Entities\Behaviors\Brick.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BrickDestory">
-    <Position X="15.25" Y="13" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAgAAAAAACAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAEA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\BrickDestory.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Paddle">
-    <Position X="17.5" Y="10" Width="2" />
+    <Position X="14.5" Y="2" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAACAAAAAgAACAAIQBEAAILwAAAAAgEEAAAAA=</HashCode>
+      <HashCode>AAQBAAAAACAAABAgAACQAIQBMAAILwAAAAIgEFAAAEA=</HashCode>
       <FileName>Assets\Scripts\Entities\Behaviors\Paddle.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PaddleDestory">
-    <Position X="17.5" Y="15.25" Width="2" />
+  <Class Name="Wall">
+    <Position X="12.5" Y="4.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAgAAgAAAEA=</HashCode>
-      <FileName>Assets\Scripts\Entities\Behaviors\PaddleDestory.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Struct Name="PlayerData">
-    <Position X="9.5" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAAAAAAAIAAAAABABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Scripts\Datas\PlayerData.cs</FileName>
-    </TypeIdentifier>
-  </Struct>
-  <Enum Name="PlayerType">
-    <Position X="11.25" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
-      <FileName>Assets\Scripts\Datas\PlayerData.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="WallType">
-    <Position X="13.25" Y="12" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAACACAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Entities\Behaviors\Wall.cs</FileName>
     </TypeIdentifier>
-  </Enum>
+  </Class>
+  <Class Name="Singleton&lt;T&gt;">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\Singleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AudioManager" Collapsed="true">
+    <Position X="2.75" Y="6.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgCAAAAApQAAIAAABCAAABAAAAAAAAgAAAAAgAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\AudioManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="2.75" Y="7" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>gQkEAECAAQACAAMAgAIAQwAiEEBwAAAIJKAEjAABAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SaveManager" Collapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\SaveManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageManager" Collapsed="true">
+    <Position X="2.75" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAEAACAABCAAEAAAEAAABAYAAASAAAEEA=</HashCode>
+      <FileName>Assets\Scripts\Managers\StageManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIManager" Collapsed="true">
+    <Position X="2.75" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAgIQAAACAAAAAAAAAAAAAAAAAAAAAAAAACAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\Managers\UIManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PopupBase">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAgAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\PopupBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AchievementPopup" Collapsed="true">
+    <Position X="7.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAQAAAQAAAAAAAAgAAAAAAAACIAAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\AchievementPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameoverPopup" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAIAAAAAAAAAAgAEAAAAAAAAAAAAQACAAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\GameoverPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScoreBoardPopup" Collapsed="true">
+    <Position X="7.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\ScoreBoardPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SettingPopup" Collapsed="true">
+    <Position X="7.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgACCAYAIACAAAAQEAQAAAAAgAgAAQAAAAAAQA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\SettingPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageClearPopup" Collapsed="true">
+    <Position X="7.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAAAAAAAAAAAAABAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\StageClearPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageStartPopup" Collapsed="true">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAACAAAAAAgAAAAAABAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Assets\Scripts\UIs\Popup\StageStartPopup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="맑은 고딕" Size="9" />
 </ClassDiagram>

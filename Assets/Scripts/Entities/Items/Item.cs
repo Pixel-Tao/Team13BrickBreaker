@@ -12,13 +12,16 @@ public enum  ItemType
 
 public abstract class Item : MonoBehaviour
 {
+    // 아이템 타입
     public abstract ItemType ItemType { get; protected set; }
 
+    // 아이템을 파괴하는 함수
     public void DestroyItem()
     {
         Destroy(gameObject);
     }
 
+    // 아이템이 Padddle에 닿았을 때 OR 아래 벽에 닿았을때의 처리
     public void OnTriggerEnter2D(Collider2D collision)
     {
         // 아이템이 플레이어에게 효과를 주는 방향

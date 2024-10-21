@@ -23,13 +23,11 @@ public class GameScene : MonoBehaviour
 
     void Start()
     {
-        // Scene 진입점
-        fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
-        gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
-        Instantiate(wallPrefab);
-        
-        SetEvents();
-
+        // GameScene 진입점
+        // UI 초기화
+        InitUI();
+        // Event 초기화
+        InitEvent();
         // 게임 정보 초기화
         GameManager.Instance.InitGame(itemPrefabs.Count);
         // 스테이지 정보 초기화
@@ -40,11 +38,19 @@ public class GameScene : MonoBehaviour
         StageManager.Instance.LoadStage();
         // 사운드 플레이
         AudioManager.Instance.GamePlay();
-
+        // 화면을 점차적으로 밝게 한다.
         UIManager.Instance.FadeIn();
     }
 
-    private void SetEvents()
+    private void InitUI()
+    {
+        fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
+        gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
+        Instantiate(wallPrefab);
+
+    }
+
+    private void InitEvent()
     {
         StageManager.Instance?.ClearEvent();
         UIManager.Instance?.ClearEvent();

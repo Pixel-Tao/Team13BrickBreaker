@@ -15,6 +15,7 @@ public class Box : MonoBehaviour
 {
     // 박스 충돌 면
     public BoxContactType allowBoxContactType = BoxContactType.All;
+    // 공이 닿는 모든 BoxCollider2D
     protected BoxCollider2D boxCollider;
 
     protected virtual void Awake()
@@ -22,6 +23,7 @@ public class Box : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
     }
 
+    // 닿는 면이 허용된 면인지 확인
     public bool AllowBoxContact(Vector3 hitPosition)
     {
         if (allowBoxContactType == BoxContactType.All)

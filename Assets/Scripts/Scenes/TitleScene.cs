@@ -13,17 +13,30 @@ public class TitleScene : MonoBehaviour
     private void Start()
     {
         // TitleScene 진입점.
+        // UI 초기화
+        InitUI();
+        // Event 초기화
+        InitEvent();
+        // 스테이지 초기화
+        StageManager.Instance.InitStage(stageSO);
+        // 화면을 점차적으로 밝게 한다.
+        UIManager.Instance.FadeIn();
+        // GameScene에서 사운드 재생
+        AudioManager.Instance.TitlePlay();
+    }
+
+    private void InitUI()
+    {
         fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         titleUI = Instantiate(titleUIPrefab).GetComponent<TitleUI>();
+    }
 
+    private void InitEvent()
+    {
         UIManager.Instance?.ClearEvent();
         StageManager.Instance?.ClearEvent();
-        StageManager.Instance.InitStage(stageSO);
 
         UIManager.Instance.OnFadeEvent += Fade;
-
-        UIManager.Instance.FadeIn();
-        AudioManager.Instance.TitlePlay();
     }
 
     private void Fade(FadeType fadeType, Action fadedAction)

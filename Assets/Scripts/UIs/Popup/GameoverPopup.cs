@@ -10,7 +10,7 @@ public class GameoverPopup : PopupBase
 
     [SerializeField] private Text messageText;
 
-    public void Init()
+    public override void Init()
     {
         if (GameManager.Instance.PlayModeType == Defines.PlayModeType.Single)
         {
