@@ -13,6 +13,8 @@ public enum AudioClipType
     None,
 
     bgm1,
+    GameTitle,
+    GamePlay,
 
     shoot,
     brick_break,
@@ -124,9 +126,23 @@ public class AudioManager : Singleton<AudioManager>
             Sfx.UnPause();
     }
 
-    public void Play()
+    //public void Play()
+    //{
+    //    PlayBgm(AudioClipType.bgm1);
+    //    SaveSettingData settingData = SaveManager.Instance.Load<SaveSettingData>();
+    //    VolumeBgm(settingData.bgmVolume);
+    //    VolumeSfx(settingData.sfxVolume);
+    //}
+    public void Title()
     {
-        PlayBgm(AudioClipType.bgm1);
+        PlayBgm(AudioClipType.GameTitle);
+        SaveSettingData settingData = SaveManager.Instance.Load<SaveSettingData>();
+        VolumeBgm(settingData.bgmVolume);
+        VolumeSfx(settingData.sfxVolume);
+    }
+    public void PlayStage()
+    {
+        PlayBgm(AudioClipType.GamePlay);
         SaveSettingData settingData = SaveManager.Instance.Load<SaveSettingData>();
         VolumeBgm(settingData.bgmVolume);
         VolumeSfx(settingData.sfxVolume);
