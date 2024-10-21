@@ -77,7 +77,7 @@ public class GameoverPopup : PopupBase
         if (player1ScoreBoard.gameObject.activeSelf)
             SaveScore(player1ScoreBoard);
         if (player2ScoreBoard.gameObject.activeSelf)
-            SaveScore(player1ScoreBoard);
+            SaveScore(player2ScoreBoard);
     }
 
     private void SaveScore(GameoverPlayerSlot slot)

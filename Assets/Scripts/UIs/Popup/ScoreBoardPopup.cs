@@ -27,6 +27,7 @@ public class ScoreBoardPopup : PopupBase
             }
 
             scoreBoardSlots[i].SetData(dataList.scores[i]);
+            scoreBoardSlots[i].gameObject.SetActive(true);
         }
     }
 }
