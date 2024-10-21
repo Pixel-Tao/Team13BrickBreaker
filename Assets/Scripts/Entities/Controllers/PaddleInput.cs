@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,35 +28,17 @@ public class PaddleInput : MonoBehaviour
         paddle.CallLook(dir.x);
     }
 
-    private bool AllowInputEvent()
-    {
-        return UIManager.Instance.IsPause == false;
-    }
-
     #region Player1 키 이벤트
     public void OnKeyMove(InputValue value)
     {
-        if (!AllowInputEvent()) return;
-
         direction = value.Get<Vector2>();
     }
 
     public void OnKeyShoot(InputValue value)
     {
-        if (!AllowInputEvent()) return;
-
         if (value.isPressed)
         {
             paddle.CallShoot();
-        }
-    }
-    public void OnKeyEscape(InputValue value)
-    {
-        if (!AllowInputEvent()) return;
-
-        if (value.isPressed)
-        {
-            UIManager.Instance.Pause();
         }
     }
     #endregion
@@ -65,8 +46,6 @@ public class PaddleInput : MonoBehaviour
     #region Player2 키 이벤트
     public void OnMouseMove(InputValue value)
     {
-        if (!AllowInputEvent()) return;
-
         Vector2 screenPos = value.Get<Vector2>();
         Vector3 worldPos = camera.ScreenToWorldPoint(screenPos);
         Vector2 dir = (worldPos - transform.position).normalized;
@@ -83,21 +62,9 @@ public class PaddleInput : MonoBehaviour
 
     public void OnMouseShoot(InputValue value)
     {
-        if (!AllowInputEvent()) return;
-
         if (value.isPressed)
         {
             paddle.CallShoot();
-        }
-    }
-
-    public void OnMouseEscape(InputValue value)
-    {
-        if (!AllowInputEvent()) return;
-
-        if (value.isPressed)
-        {
-            UIManager.Instance.Pause();
         }
     }
     #endregion

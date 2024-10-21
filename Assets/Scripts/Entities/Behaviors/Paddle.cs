@@ -38,10 +38,6 @@ public class Paddle : Box
 
     private void OnDestroy()
     {
-        OnMoveEvent = null;
-        OnLookEvent = null;
-        OnShootEvent = null;
-        OnPaddleDestoryEvent = null;
         GameManager.Instance.OnPlayerClearEvent -= StageClear;
     }
 

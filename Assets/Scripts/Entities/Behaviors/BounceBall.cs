@@ -45,12 +45,6 @@ public class BounceBall : MonoBehaviour
             FollowOwner();
     }
 
-    private void OnDestroy()
-    {
-        Owner.OnShootEvent -= Shoot;
-        Owner.Stat.OnItemEffectEvent -= TakeItemEffect;
-    }
-
     private void FollowOwner()
     {
         Vector2 ownerPos = new Vector2(Owner.transform.position.x, Owner.transform.position.y + 0.3f);
@@ -66,7 +60,10 @@ public class BounceBall : MonoBehaviour
         else
             spriteRenderer.color = Color.red;
 
+        owner.OnShootEvent -= Shoot;
         owner.OnShootEvent += Shoot;
+
+        Owner.Stat.OnItemEffectEvent -= TakeItemEffect;
         Owner.Stat.OnItemEffectEvent += TakeItemEffect;
 
         owner.AddMyBall(this);
