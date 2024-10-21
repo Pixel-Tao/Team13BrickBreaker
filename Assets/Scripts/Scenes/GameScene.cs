@@ -39,7 +39,7 @@ public class GameScene : MonoBehaviour
         // 게임 스테이지 불러오기 -> 게임 시작됨
         StageManager.Instance.LoadStage();
         // 사운드 플레이
-        AudioManager.Instance.PlayStage();
+        AudioManager.Instance.GamePlay();
 
         UIManager.Instance.FadeIn();
     }
