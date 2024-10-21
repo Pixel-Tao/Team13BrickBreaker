@@ -1,28 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     private readonly int DEFAULT_LIFE = 3;
     private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
 
-    private static GameManager _instance;
-    public static GameManager Instance { get { Init(); return _instance; } }
-
     private int dropableItemCount = 0;
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "GameManager" };
-            _instance = go.AddComponent<GameManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
 
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle, Vector3?> OnBallGenerateEvent;

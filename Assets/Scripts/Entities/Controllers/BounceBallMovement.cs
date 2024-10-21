@@ -54,12 +54,11 @@ public class BounceBallMovement : MonoBehaviour
     {
         if (isMoving && reflect.reflectType == BallReflectType.OnCollisionReflect)
             transform.position += ball.Stat.CurrentBallStat.ballSpeed * direction * Time.deltaTime;
-
     }
 
     private void FixedUpdate()
     {
-        if (isMoving && reflect.reflectType == BallReflectType.OnCollisionPhisics)
+        if (isMoving && reflect.IsPhisicsReflect())
             velocity = rb2d.velocity;
     }
 
@@ -67,9 +66,9 @@ public class BounceBallMovement : MonoBehaviour
     {
         isMoving = true;
 
-        if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
+        if (reflect.IsPhisicsReflect())
             rb2d.velocity = vector;
         else
-            this.direction = vector.normalized;
+            direction = vector.normalized;
     }
 }

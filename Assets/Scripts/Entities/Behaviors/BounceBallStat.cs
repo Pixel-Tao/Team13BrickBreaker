@@ -5,7 +5,10 @@ public class BounceBallStat : MonoBehaviour
 {
     public PaddleStatData CurrentBallStat;
     [SerializeField] private float maxBallSpeed = 6f;
+    [SerializeField] private float minBallSpeed = 3f;
     [SerializeField] private int maxBallPower = 3;
+
+    public float CurrentBallSpeed => Mathf.Clamp(CurrentBallStat.ballSpeed, minBallSpeed, maxBallSpeed);
 
     private BounceBall bounceBall;
     private PaddleStat paddleStat;
