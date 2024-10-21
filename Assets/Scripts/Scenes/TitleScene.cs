@@ -44,6 +44,4 @@ public class TitleScene : MonoBehaviour
         // fadeType에 따라 FadeIn 또는 FadeOut 실행
         fadeUI.Play(fadeType, fadedAction);
     }
-
-
 }

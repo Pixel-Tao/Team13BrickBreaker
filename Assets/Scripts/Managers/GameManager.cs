@@ -66,6 +66,10 @@ public class GameManager : Singleton<GameManager>
             PlayerJoin(PlayerType.Player1);
             PlayerJoin(PlayerType.Player2);
         }
+
+        // 플레이어 정보 업데이트
+        PlayerUpdate(PlayerType.Player1);
+        PlayerUpdate(PlayerType.Player2);
     }
 
     /// <summary>
@@ -196,6 +200,12 @@ public class GameManager : Singleton<GameManager>
 
         // 플레이어 추가.
         OnPlayerJoinEvent?.Invoke(player);
+    }
+
+    public void PlayerUpdate(PlayerType type)
+    {
+        OnScoreChangedEvent?.Invoke(type, players[type].score);
+        OnLifeChangedEvent?.Invoke(type, players[type].life);
     }
 
     public void PlayerClear()

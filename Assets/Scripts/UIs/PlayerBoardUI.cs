@@ -9,13 +9,17 @@ public class PlayerBoardUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI lifeText;
     // Start is called before the first frame update
-    private void Start()
+
+    private void Awake()
     {
         GameManager.Instance.OnScoreChangedEvent += ScoreChanged;
         GameManager.Instance.OnLifeChangedEvent += LifeChanged;
+    }
 
-        ScoreChanged(playerType, GameManager.Instance.GetScore(playerType));
-        LifeChanged(playerType, GameManager.Instance.GetLife(playerType));
+    private void Start()
+    {
+        scoreText.text = "0";
+        lifeText.text = "0";
     }
 
     private void OnDestroy()
