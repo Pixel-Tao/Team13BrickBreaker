@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     private readonly int DEFAULT_LIFE = 3;
-    private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
+    private readonly float DEFAULT_ITEM_DROP_RATE = 10f;
 
     private int dropableItemCount = 0;
 
@@ -205,7 +205,7 @@ public class GameManager : Singleton<GameManager>
 
     public void DropItem(Vector3 pos)
     {
-        if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
+        if (UnityEngine.Random.Range(0f, 100f) >= DEFAULT_ITEM_DROP_RATE) return;
         OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
     }
 
@@ -213,7 +213,6 @@ public class GameManager : Singleton<GameManager>
     {
         this.PlayModeType = mode;
     }
-
 
     #region Screen Area
     public float ScreenMinX { get; private set; }

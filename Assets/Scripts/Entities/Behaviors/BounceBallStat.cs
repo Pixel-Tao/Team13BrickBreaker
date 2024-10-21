@@ -64,10 +64,5 @@ public class BounceBallStat : MonoBehaviour
         {
             ResetSpeed();
         }
-        //else if (type == typeof(BallMultipleAddItem))
-        //{
-        //    BallMultipleAddItem ballMultipleAddItem = item as BallMultipleAddItem;
-        //    GenerateBall(ballMultipleAddItem.ballAddCountValue);
-        //}
     }
 }

@@ -30,4 +30,9 @@ public class PaddleStat : MonoBehaviour
             OnItemEffectEvent?.Invoke(item);
         }
     }
+
+    private void OnDestroy()
+    {
+        OnItemEffectEvent = null;
+    }
 }

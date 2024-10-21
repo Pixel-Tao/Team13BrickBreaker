@@ -21,7 +21,7 @@ public class StageManager : Singleton<StageManager>
 
     public void LoadStage()
     {
-        if (SelectedStage > StageSO.stages.Count)
+        if (0 >= SelectedStage || SelectedStage > StageSO.stages.Count)
         {
             GameManager.Instance.Ending();
             return;
