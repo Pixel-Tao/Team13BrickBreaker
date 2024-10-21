@@ -13,11 +13,10 @@ public enum WallType
 
 public class Wall : Box
 {
-    public WallType wallType = WallType.None;
+    public WallType wallType;
 
     private void Start()
     {
-        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
         if (wallType == WallType.Left)
             GameManager.Instance.SetMinX(transform.position.x + (boxCollider.bounds.size.x / 2));
         else if (wallType == WallType.Right)

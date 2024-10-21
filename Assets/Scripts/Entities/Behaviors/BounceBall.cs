@@ -55,6 +55,8 @@ public class BounceBall : MonoBehaviour
     {
         isShooting = false;
         this.Owner = owner;
+        Vector2 ownerPos = new Vector2(Owner.transform.position.x, Owner.transform.position.y + 0.3f);
+        transform.position = ownerPos;
         if (owner.playerType == PlayerType.Player1)
             spriteRenderer.color = Color.green;
         else
