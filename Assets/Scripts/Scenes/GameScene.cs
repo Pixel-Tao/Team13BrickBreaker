@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameScene : MonoBehaviour
 {
+    #region Prefabs
     [SerializeField] private GameObject gameUIPrefab;
     [SerializeField] private GameObject bounceBallPrefab;
     [SerializeField] private GameObject paddle1Prefab;
@@ -20,6 +21,7 @@ public class GameScene : MonoBehaviour
 
     private GameUI gameUI;
     private FadeUI fadeUI;
+    #endregion
 
     void Start()
     {

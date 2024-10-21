@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class TitleScene : MonoBehaviour
 {
+    #region Prefabs
     [SerializeField] private GameObject titleUIPrefab;
     [SerializeField] private GameObject fadeUIPrefab;
     [SerializeField] private StageSO stageSO;
 
     private TitleUI titleUI;
     private FadeUI fadeUI;
+    #endregion
 
     private void Start()
     {
