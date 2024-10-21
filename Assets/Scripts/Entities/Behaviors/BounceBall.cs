@@ -102,6 +102,8 @@ public class BounceBall : MonoBehaviour
             reflect.BrickReflectBounce(ballCollision, brickCollider);
         else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
             reflect.BrickPhisicsBounce(ballCollision, brickCollider);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisicsV2)
+            reflect.BrickPhisicsBounceV2(ballCollision, brickCollider);
     }
 
     public void WallBounce(Collision2D ballCollision, Collider2D wallCollider)
@@ -110,6 +112,8 @@ public class BounceBall : MonoBehaviour
             reflect.WallReflectBounce(ballCollision, wallCollider);
         else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
             reflect.WallPhisicsBounce(ballCollision, wallCollider);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisicsV2)
+            reflect.WallPhisicsBounceV2(ballCollision, wallCollider);
     }
     public void PaddleBounce(Collision2D ballCollision, Paddle paddle)
     {
@@ -117,6 +121,8 @@ public class BounceBall : MonoBehaviour
             reflect.PaddleReflectBounce(ballCollision, paddle);
         else if (reflect.reflectType == BallReflectType.OnCollisionPhisics)
             reflect.PaddlePhisicsBounce(ballCollision, paddle);
+        else if (reflect.reflectType == BallReflectType.OnCollisionPhisicsV2)
+            reflect.PaddlePhisicsBounceV2(ballCollision, paddle);
     }
 
     public void UpdateCrashCount()

@@ -9,7 +9,8 @@ public enum BallReflectType
     None,
     DetectAndRefelct, // 이동할때 물체 감지하여 방향 전환
     OnCollisionReflect, // 충돌 이벤트 발생했을때 방향 전환
-    OnCollisionPhisics // 충돌 이벤트 발생했을때 물리적 으로 방향 전환
+    OnCollisionPhisics, // 충돌 이벤트 발생했을때 물리적 으로 방향 전환
+    OnCollisionPhisicsV2 // 충돌 이벤트 발생했을때 물리적 으로 방향 전환 Version2
 }
 
 public class BounceBallReflect : MonoBehaviour
@@ -21,7 +22,7 @@ public class BounceBallReflect : MonoBehaviour
     private BounceBall ball;
     private BounceBallMovement movement;
     private float layDistance = 1f;
-    private float randBounceAngle = 10f;
+    private float randBounceAngle = 2f;
 
     // 공의 충돌 기준 거리
     private float minReflectDistance = 0.005f;
@@ -52,22 +53,28 @@ public class BounceBallReflect : MonoBehaviour
     private void Start()
     {
         //isPhisics true일 경우 Rigidbody2D 사용
-        rb2d.constraints =
-            reflectType != BallReflectType.OnCollisionPhisics ?
-            RigidbodyConstraints2D.FreezeAll :
-            RigidbodyConstraints2D.None;
+        if (reflectType == BallReflectType.OnCollisionPhisics ||
+            reflectType == BallReflectType.OnCollisionPhisicsV2)
+            rb2d.constraints = RigidbodyConstraints2D.None;
+        else
+            rb2d.constraints = RigidbodyConstraints2D.FreezeAll;
 
         // DetectAndRefelct 이면 Collider event를 발생 시킬 이유가 없음.
         if (reflectType == BallReflectType.DetectAndRefelct)
             circleCollider.excludeLayers = includeRayLayerMask;
     }
 
-    #region 물리엔진 사용
+    public bool IsPhisicsReflect()
+    {
+        return reflectType == BallReflectType.OnCollisionPhisics ||
+            reflectType == BallReflectType.OnCollisionPhisicsV2;
+    }
+
+    #region 물리엔진 사용 V1
     public void BrickPhisicsBounce(Collision2D ballCollision, Collider2D brickCollder)
     {
         WallPhisicsBounce(ballCollision, brickCollder);
     }
-
     public void WallPhisicsBounce(Collision2D ballCollision, Collider2D wallCollder)
     {
         // 충돌한 표면의 법선 벡터
@@ -85,11 +92,10 @@ public class BounceBallReflect : MonoBehaviour
         }
 
         reflectVector = reflectVector.normalized * ball.Stat.CurrentBallStat.ballSpeed;
-        ball.Reflected(wallCollder.gameObject); 
+        ball.Reflected(wallCollder.gameObject);
         // 반사 벡터로 공의 속도 변경
         movement.Move(reflectVector);
     }
-
     public void PaddlePhisicsBounce(Collision2D ballCollision, Paddle paddle)
     {
         // 패들의 중앙을 기준으로 공이 충돌한 위치 계산
@@ -112,6 +118,101 @@ public class BounceBallReflect : MonoBehaviour
         movement.Move(direction);
     }
     #endregion
+
+    #region 물리엔진 사용 V2
+    public void BrickPhisicsBounceV2(Collision2D ballCollision, Collider2D brickCollder)
+    {
+        WallPhisicsBounceV2(ballCollision, brickCollder);
+    }
+    public void WallPhisicsBounceV2(Collision2D ballCollision, Collider2D wallCollder)
+    {
+        // 여러 충돌 지점 중 가장 큰 충격을 받은 지점 선택
+        ContactPoint2D primaryContact = ballCollision.contacts[0];
+        float maxImpact = 0f;
+
+        foreach (var contact in ballCollision.contacts)
+        {
+            float impact = contact.normalImpulse;
+            if (impact > maxImpact)
+            {
+                primaryContact = contact;
+                maxImpact = impact;
+            }
+        }
+
+        // 선택된 충돌 지점의 법선 벡터 사용
+        Vector2 normal = primaryContact.normal * -1;
+
+        // 공의 현재 이동 벡터 (입사 벡터)
+        Vector2 incomingVector = movement.velocity;
+        // 반사 벡터 계산
+        Vector2 reflectVector = Vector2.Reflect(incomingVector, normal);
+
+        reflectVector = reflectVector.normalized * ball.Stat.CurrentBallStat.ballSpeed;
+
+        ball.Reflected(wallCollder.gameObject);
+        // 반사 벡터로 공의 속도 변경
+        movement.Move(reflectVector);
+    }
+    public void PaddlePhisicsBounceV2(Collision2D ballCollision, Paddle paddle)
+    {
+        // movementInfluence: 패들의 움직임이 반사각에 미치는 영향의 강도
+        float movementInfluence = 0.2f;
+
+        // 패들의 충돌 범위와 위치 계산 (BoxCollider2D의 bounds를 사용하여 실제 크기 계산)
+        BoxCollider2D paddleCollider = paddle.GetComponent<BoxCollider2D>();
+        float paddleWidth = paddleCollider.bounds.size.x; // 패들의 실제 너비 사용
+        Vector3 paddlePosition = paddle.transform.position;
+        Vector3 contactPoint = ballCollision.GetContact(0).point;
+
+        // 공의 반지름을 고려한 충돌 지점의 상대적 위치 계산
+        float ballRadius = ballCollision.collider.bounds.extents.x; // 공의 반경 계산
+        float relativeHitPosition = (contactPoint.x - paddlePosition.x) / (paddleWidth + ballRadius);
+        relativeHitPosition = Mathf.Clamp(relativeHitPosition, -1f, 1f); // 범위를 -1에서 1 사이로 제한
+
+        // 충돌 위치에 따른 반사각 계산
+        float maxBounceAngle = paddle.bounceAngleRange; // 설정된 최대 반사각
+        float minBounceAngle = 10f; // 최소 반사각 설정
+        float bounceAngle = relativeHitPosition * maxBounceAngle;
+
+        // 너무 작은 각도 보정 -> 공이 패들에서 스쳐지나가며 멈추지 않도록 최소 각도 설정
+        if (Mathf.Abs(bounceAngle) < minBounceAngle)
+        {
+            bounceAngle = Mathf.Sign(bounceAngle) * minBounceAngle;
+        }
+
+        // 반사각에 약간의 무작위성 추가
+
+        float randomFactor = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle); // 2도 내외로 무작위성 추가
+        bounceAngle += randomFactor;
+
+        bounceAngle = Mathf.Clamp(bounceAngle, -maxBounceAngle, maxBounceAngle); // 최대/최소 반사각 제한
+
+        // 반사 벡터 계산 (공의 속도를 유지하면서 각도만 변경)
+        Vector2 direction = new Vector2(Mathf.Sin(bounceAngle * Mathf.Deg2Rad), Mathf.Cos(bounceAngle * Mathf.Deg2Rad));
+        direction = direction.normalized;
+
+        Rigidbody2D paddleRb = paddle.GetComponent<Rigidbody2D>();
+
+
+        // 패들의 움직임에 따른 반사각 조정 -> movementInfluence 값이 클수록 패들의 속도가 공의 반사각에 영향을 크게 미침
+        float maxPaddleSpeedEffect = 0.3f; // 패들 속도가 반사각에 미치는 최대 한계값 설정
+        float paddleSpeedEffect = Mathf.Clamp(paddleRb.velocity.x * movementInfluence, -maxPaddleSpeedEffect, maxPaddleSpeedEffect);
+        direction.x += paddleSpeedEffect;
+        direction = direction.normalized;
+
+        // 공의 속도를 일정 범위 내에서 유지 (최소 및 최대 속도 적용)
+        //float currentSpeed = rb2d.velocity.magnitude;
+        //float minSpeed = 5f; // 최소 속도
+        //float maxSpeed = 20f; // 최대 속도
+        //float finalSpeed = Mathf.Clamp(currentSpeed, minSpeed, maxSpeed);
+
+        ball.Reflected(paddle.gameObject);
+        // 공의 속도를 기존 속도 크기에 맞춰 반사
+        movement.Move(direction * ball.Stat.CurrentBallSpeed);
+    }
+    #endregion
+
 
     #region 이동벡터 사용
     public void BrickReflectBounce(Collision2D ballCollision, Collider2D wallCollder)
@@ -194,7 +295,7 @@ public class BounceBallReflect : MonoBehaviour
         foreach (Collider2D collider in colliders)
         {
             Box box = collider.GetComponent<Box>();
-            
+
             Vector3 hitPostion = collider.ClosestPoint(transform.position);
             if (!box.AllowBoxContact(hitPostion)) continue;
 
