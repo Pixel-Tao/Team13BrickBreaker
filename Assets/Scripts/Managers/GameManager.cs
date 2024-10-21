@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     private readonly int DEFAULT_LIFE = 3;
-    private readonly float DEFAULT_ITEM_DROP_RATE = 10f;
+    private readonly float DEFAULT_ITEM_DROP_RATE = 20f;
 
     private int dropableItemCount = 0;
 

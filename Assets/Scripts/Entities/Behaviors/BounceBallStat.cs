@@ -34,6 +34,7 @@ public class BounceBallStat : MonoBehaviour
 
     public void ResetSpeed()
     {
+        if (paddleStat == null) return;
         CurrentBallStat.ballSpeed = paddleStat.BallDefaultStat.ballSpeed;
     }
 
