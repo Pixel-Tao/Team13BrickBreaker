@@ -214,6 +214,7 @@ public class GameManager : Singleton<GameManager>
         this.PlayModeType = mode;
     }
 
+
     #region Screen Area
     public float ScreenMinX { get; private set; }
     public float ScreenMaxX { get; private set; }

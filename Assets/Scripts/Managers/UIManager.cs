@@ -9,6 +9,8 @@ public class UIManager : Singleton<UIManager>
 
     private Dictionary<string, PopupBase> popups = new Dictionary<string, PopupBase>();
 
+    public bool IsPause { get; private set; }
+
     public void ClearEvent()
     {
         OnFadeEvent = null;
@@ -59,5 +61,23 @@ public class UIManager : Singleton<UIManager>
         {
             popupBase.gameObject.SetActive(false);
         }
+    }
+
+    public void Pause()
+    {
+        if (IsPause) return;
+
+        IsPause = true;
+        ShowPopup<PausePopup>()?.Init();
+        Time.timeScale = 0f;
+    }
+
+    public void Resume()
+    {
+        if (IsPause == false) return;
+
+        IsPause = false;
+        Time.timeScale = 1f;
+        ClosePopup<PausePopup>();
     }
 }
