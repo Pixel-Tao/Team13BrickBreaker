@@ -147,6 +147,13 @@ public class BounceBallReflect : MonoBehaviour
         Vector2 incomingVector = movement.velocity;
         // 반사 벡터 계산
         Vector2 reflectVector = Vector2.Reflect(incomingVector, normal);
+        // 직교 상태나 평행 상태일 때 추가적인 반사 각도 적용
+        float dotProduct = Mathf.Abs(Vector2.Dot(incomingVector, reflectVector));
+        if (dotProduct >= parallelThreshold || dotProduct <= orthogonalThreshold)
+        {
+            float additionalBounceAngle = UnityEngine.Random.Range(-randBounceAngle, randBounceAngle);
+            reflectVector = Quaternion.Euler(0, 0, additionalBounceAngle) * reflectVector;
+        }
 
         reflectVector = reflectVector.normalized * ball.Stat.CurrentBallStat.ballSpeed;
 

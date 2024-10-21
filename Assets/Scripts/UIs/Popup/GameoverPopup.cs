@@ -89,11 +89,6 @@ public class GameoverPopup : PopupBase
         if (string.IsNullOrWhiteSpace(name))
             return;
 
-        // 점수가 낮으면 저장 안함
-        int minScore = data.scores.Count == 0 ? 0 : data.scores.Min(s => s.score);
-        if (minScore > GameManager.Instance.GetScore(slot.playerType))
-            return;
-
         if (data.scores.Count >= 10)
             data.scores.RemoveAt(data.scores.Count - 1);
 
