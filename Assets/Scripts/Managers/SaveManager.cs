@@ -1,32 +1,31 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
-public class SaveManager : MonoBehaviour
+public class SaveManager : Singleton<SaveManager>
 {
-    private static SaveManager _instance;
-    public static SaveManager Instance { get { Init(); return _instance; } }
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "SaveManager" };
-            _instance = go.AddComponent<SaveManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
+    private readonly string SAVE_DIR = "SaveDatas";
 
     public void Save<T>(T data) where T : class
     {
-        string json = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString(typeof(T).Name, json);
+        string json = JsonConvert.SerializeObject(data);
+
+        if (Directory.Exists(SAVE_DIR) == false)
+            Directory.CreateDirectory(SAVE_DIR);
+
+        string path = System.IO.Path.Combine(SAVE_DIR, typeof(T).Name + ".json");
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(json);
+        File.WriteAllBytes(path, bytes);
     }
 
-    public T Load<T>() where T : class
+    public T Load<T>() where T : class, new()
     {
-        string json = PlayerPrefs.GetString(typeof(T).Name);
-        return JsonUtility.FromJson<T>(json);
+        string path = System.IO.Path.Combine(SAVE_DIR, typeof(T).Name + ".json");
+        if (File.Exists(path) == false) return new T();
+        byte[] bytes = File.ReadAllBytes(path);
+        string json = System.Text.Encoding.UTF8.GetString(bytes);
+        return JsonConvert.DeserializeObject<T>(json);
     }
 }

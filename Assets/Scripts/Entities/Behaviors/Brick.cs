@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Brick : MonoBehaviour
+public class Brick : Box
 {
     public event Action<PlayerType> OnBrickDestroyedEvent;
     [SerializeField][Range(0, 99)] private int hp = 5;
@@ -15,19 +15,17 @@ public class Brick : MonoBehaviour
         if (ballRb != null && collision.gameObject.tag == "Ball")
         {
             BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
-            HpChange(ball, hp - ball.Stat.CurrentBallStat.ballPower);
-
-            ball.BrickBounce(collision);
-            AudioManager.Instance.PlaySfx(AudioClipType.brick_bounce);
+            ball.BrickBounce(collision, boxCollider);
         }
     }
 
-    private void HpChange(BounceBall ball, int value)
+    public void OnDamaged(BounceBall ball, int value)
     {
-        GameManager.Instance.AddScrore(ball.Owner.playerType, 500);
-        hp = value;
+        GameManager.Instance.AddScrore(ball.Owner.playerType, 100);
+        hp -= value;
         if (hp <= 0)
         {
+            hp = 0;
             OnBrickDestroyedEvent?.Invoke(ball.Owner.playerType);
         }
     }

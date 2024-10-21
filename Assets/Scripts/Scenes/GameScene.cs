@@ -16,11 +16,9 @@ public class GameScene : MonoBehaviour
 
     [SerializeField] private List<GameObject> itemPrefabs;
 
-    [SerializeField] private StageLevelSO stageLevelSO;
+    [SerializeField] private StageSO stageSO;
 
     private GameUI gameUI;
-    private Stage currentStage;
-
     private FadeUI fadeUI;
 
     void Start()
@@ -29,28 +27,33 @@ public class GameScene : MonoBehaviour
         fadeUI = Instantiate(fadeUIPrefab).GetComponent<FadeUI>();
         gameUI = Instantiate(gameUIPrefab).GetComponent<GameUI>();
         Instantiate(wallPrefab);
+        
+        SetEvents();
 
-        UIManager.Instance.SetEvent(Fade);
+        // 게임 정보 초기화
+        GameManager.Instance.InitGame(itemPrefabs.Count);
+        // 스테이지 정보 초기화
+        StageManager.Instance.InitStage(stageSO);
+        // 플레이어 데이터 리셋
+        GameManager.Instance.PlayerReset();
+        // 게임 스테이지 불러오기 -> 게임 시작됨
+        StageManager.Instance.LoadStage();
+        // 사운드 플레이
+        AudioManager.Instance.Play();
 
-        GameManager.Instance.OnPlayerJoinEvent -= PlayerJoin;
+        UIManager.Instance.FadeIn();
+    }
+
+    private void SetEvents()
+    {
+        StageManager.Instance?.ClearEvent();
+        UIManager.Instance?.ClearEvent();
+        GameManager.Instance?.ClearEvent();
+
+        UIManager.Instance.OnFadeEvent += Fade;
         GameManager.Instance.OnPlayerJoinEvent += PlayerJoin;
-        GameManager.Instance.OnBallGenerateEvent -= BallGenerate;
         GameManager.Instance.OnBallGenerateEvent += BallGenerate;
-        GameManager.Instance.OnStageLoadEvent -= LoadStage;
-        GameManager.Instance.OnStageLoadEvent += LoadStage;
-        GameManager.Instance.OnItemDropEvent -= ItemDrop;
         GameManager.Instance.OnItemDropEvent += ItemDrop;
-
-        GameManager.Instance.LoadStage(itemPrefabs.Count);
-
-        UIManager.Instance.FadeIn(() =>
-        {
-            GameManager.Instance.GameStart();
-
-            AudioManager.Instance.PlayBgm(AudioClipType.bgm1);
-            AudioManager.Instance.VolumeBgm(0.1f);
-            AudioManager.Instance.VolumeSfx(0.5f);
-        });
     }
 
     private void PlayerJoin(PlayerType playerType)
@@ -78,12 +81,6 @@ public class GameScene : MonoBehaviour
         else
             // Owner 기준으로 공이 생성되도록 하는 함수
             ball.GetComponent<BounceBall>().SetInfo(owner);
-    }
-
-    private void LoadStage(int level)
-    {
-        GameObject stagePrefab = stageLevelSO.stages[level - 1];
-        currentStage = Instantiate(stagePrefab).GetComponent<Stage>();
     }
 
     private void ItemDrop(Vector3 pos, int index)

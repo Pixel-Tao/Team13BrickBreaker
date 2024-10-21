@@ -11,9 +11,9 @@ public enum WallType
     Right
 }
 
-public class Wall : MonoBehaviour
+public class Wall : Box
 {
-    [SerializeField] private WallType wallType = WallType.None;
+    public WallType wallType = WallType.None;
 
     private void Start()
     {
@@ -22,6 +22,10 @@ public class Wall : MonoBehaviour
             GameManager.Instance.SetMinX(transform.position.x + (boxCollider.bounds.size.x / 2));
         else if (wallType == WallType.Right)
             GameManager.Instance.SetMaxX(transform.position.x - (boxCollider.bounds.size.x / 2));
+        else if (wallType == WallType.Bottom)
+            GameManager.Instance.SetMinY(transform.position.y + (boxCollider.bounds.size.y / 2));
+        else if (wallType == WallType.Top)
+            GameManager.Instance.SetMaxY(transform.position.y - (boxCollider.bounds.size.y / 2));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -33,16 +37,7 @@ public class Wall : MonoBehaviour
         if (rb != null && collision.gameObject.CompareTag("Ball"))
         {
             BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
-            if (wallType == WallType.Bottom)
-            {
-                // 공 파괴
-                ball?.DestroyBall();
-            }
-            else
-            {
-                ball?.WallBounce(collision, wallType);
-                AudioManager.Instance.PlaySfx(AudioClipType.wall_bounce);
-            }
+            ball?.WallBounce(collision, boxCollider);
         }
     }
 }

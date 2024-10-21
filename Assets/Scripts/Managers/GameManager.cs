@@ -1,48 +1,33 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     private readonly int DEFAULT_LIFE = 3;
     private readonly float DEFAULT_ITEM_DROP_RATE = 0.5f;
 
-    private static GameManager _instance;
-    public static GameManager Instance { get { Init(); return _instance; } }
-
-    private int selectedLevel = 2;
     private int dropableItemCount = 0;
-
-    public float MinX { get; private set; }
-    public float MaxX { get; private set; }
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "GameManager" };
-            _instance = go.AddComponent<GameManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
 
     public event Action<PlayerType> OnPlayerJoinEvent;
     public event Action<Paddle, Vector3?> OnBallGenerateEvent;
     public event Action<PlayerType, int> OnLifeChangedEvent;
     public event Action<PlayerType, int> OnScoreChangedEvent;
-    public event Action<int> OnStageLoadEvent;
     public event Action<Vector3, int> OnItemDropEvent;
+    public event Action OnPlayerClearEvent;
 
-    private Dictionary<PlayerType, PlayerData> players = new Dictionary<PlayerType, PlayerData>();
+    public Defines.PlayModeType PlayModeType { get; private set; } = Defines.PlayModeType.Single;
+
+    private Dictionary<PlayerType, PlayerData> players;
 
     /// <summary>
     /// 게임 데이터 초기화
     /// </summary>
-    private void GameReset()
+    public void PlayerReset()
     {
-        players.Clear();
+        if (players == null) players = new Dictionary<PlayerType, PlayerData>();
+        else players.Clear();
+
         for (int i = 0; i < Enum.GetValues(typeof(PlayerType)).Length; i++)
         {
             PlayerType playerType = (PlayerType)i;
@@ -56,10 +41,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadStage(int dropableItemCount)
+    public void ClearEvent()
+    {
+        OnPlayerJoinEvent = null;
+        OnBallGenerateEvent = null;
+        OnItemDropEvent = null;
+    }
+    public void InitGame(int dropableItemCount)
     {
         this.dropableItemCount = dropableItemCount;
-        OnStageLoadEvent?.Invoke(selectedLevel);
     }
 
     /// <summary>
@@ -67,11 +57,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameStart()
     {
-        GameReset();
-
-        PlayerJoin(PlayerType.Player1);
-        PlayerJoin(PlayerType.Player2);
-
+        if (PlayModeType == Defines.PlayModeType.Single)
+        {
+            PlayerJoin(PlayerType.Player1);
+        }
+        else if (PlayModeType == Defines.PlayModeType.Multi)
+        {
+            PlayerJoin(PlayerType.Player1);
+            PlayerJoin(PlayerType.Player2);
+        }
     }
 
     /// <summary>
@@ -180,8 +174,13 @@ public class GameManager : MonoBehaviour
     {
         if (IsAlive(PlayerType.Player1) || IsAlive(PlayerType.Player2)) return;
 
-        // TODO : 게임 오버 처리
-        SceneManager.LoadScene("TitleScene");
+        UIManager.Instance.ShowPopup<GameoverPopup>()?.Init();
+    }
+
+    public void Ending()
+    {
+        // TODO : 엔딩은 어떻게..?
+        UIManager.Instance.ShowPopup<GameoverPopup>()?.Init();
     }
 
     /// <summary>
@@ -199,19 +198,51 @@ public class GameManager : MonoBehaviour
         OnPlayerJoinEvent?.Invoke(player);
     }
 
+    public void PlayerClear()
+    {
+        OnPlayerClearEvent?.Invoke();
+    }
+
     public void DropItem(Vector3 pos)
     {
         if (UnityEngine.Random.Range(0f, 1f) <= DEFAULT_ITEM_DROP_RATE) return;
         OnItemDropEvent?.Invoke(pos, UnityEngine.Random.Range(0, dropableItemCount));
     }
 
+    public void SetPlayMode(Defines.PlayModeType mode)
+    {
+        this.PlayModeType = mode;
+    }
+
+    #region Screen Area
+    public float ScreenMinX { get; private set; }
+    public float ScreenMaxX { get; private set; }
+    public float ScreenMinY { get; private set; }
+    public float ScreenMaxY { get; private set; }
+
     public void SetMinX(float x)
     {
-        this.MinX = x;
+        this.ScreenMinX = x;
     }
 
     public void SetMaxX(float x)
     {
-        this.MaxX = x;
+        this.ScreenMaxX = x;
     }
+
+    public void SetMinY(float y)
+    {
+        this.ScreenMinY = y;
+    }
+
+    public void SetMaxY(float y)
+    {
+        this.ScreenMaxY = y;
+    }
+
+    public bool IsInGameArea(Vector3 pos)
+    {
+        return pos.x >= ScreenMinX && pos.x <= ScreenMaxX && pos.y >= ScreenMinY && pos.y <= ScreenMaxY;
+    }
+    #endregion
 }

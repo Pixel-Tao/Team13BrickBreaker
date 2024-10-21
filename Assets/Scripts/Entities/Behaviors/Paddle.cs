@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour
+public class Paddle : Box
 {
     public event Action<Vector2> OnMoveEvent;
     public event Action<float> OnLookEvent;
@@ -19,9 +19,11 @@ public class Paddle : MonoBehaviour
     private float[] arrAngles = { -30, -45, -60, 60, 45, 30 }; //발사시, 무작위로 발사될 각도 값의 배열
     private HashSet<BounceBall> myBalls = new HashSet<BounceBall>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Stat = GetComponent<PaddleStat>();
+        GameManager.Instance.OnPlayerClearEvent += StageClear;
     }
     private void Start()
     {
@@ -32,6 +34,11 @@ public class Paddle : MonoBehaviour
     private void Update()
     {
         CheckAliveAndResurrect();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnPlayerClearEvent -= StageClear;
     }
 
     private void CheckAliveAndResurrect()
@@ -90,5 +97,25 @@ public class Paddle : MonoBehaviour
     public BounceBall GetFirstBall()
     {
         return myBalls.FirstOrDefault();
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ball"))
+        {
+            BounceBall ball = collision.gameObject.GetComponent<BounceBall>();
+            ball.PaddleBounce(collision, this);
+        }
+    }
+
+    private void StageClear()
+    {
+        for (int i = myBalls.Count - 1; i >= 0; i--)
+        {
+            BounceBall ball = myBalls.ElementAt(i);
+            ball.DestroyBall();
+            RemoveMyBall(ball);
+        }
+        Destroy(gameObject);
     }
 }

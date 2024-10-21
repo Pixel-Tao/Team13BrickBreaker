@@ -22,12 +22,8 @@ public enum AudioClipType
     gameover,
 }
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-    private static AudioManager _instance;
-    public static AudioManager Instance { get { Init(); return _instance; } }
-
-
     private AudioSource bgm;
     public AudioSource Bgm
     {
@@ -36,6 +32,7 @@ public class AudioManager : MonoBehaviour
             if (bgm == null)
             {
                 GameObject go = new GameObject { name = "BGM" };
+                go.transform.SetParent(transform);
                 bgm = go.AddComponent<AudioSource>();
                 bgm.loop = true;
             }
@@ -50,20 +47,10 @@ public class AudioManager : MonoBehaviour
             if (sfx == null)
             {
                 GameObject go = new GameObject { name = "SFX" };
+                go.transform.SetParent(transform);
                 sfx = go.AddComponent<AudioSource>();
             }
             return sfx;
-        }
-    }
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "AudioManager" };
-            _instance = go.AddComponent<AudioManager>();
-            DontDestroyOnLoad(go);
         }
     }
 
@@ -135,5 +122,13 @@ public class AudioManager : MonoBehaviour
             Bgm.UnPause();
         else
             Sfx.UnPause();
+    }
+
+    public void Play()
+    {
+        PlayBgm(AudioClipType.bgm1);
+        SaveSettingData settingData = SaveManager.Instance.Load<SaveSettingData>();
+        VolumeBgm(settingData.bgmVolume);
+        VolumeSfx(settingData.sfxVolume);
     }
 }

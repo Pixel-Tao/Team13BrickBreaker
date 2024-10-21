@@ -37,8 +37,8 @@ public class PaddleMovement : MonoBehaviour
         if (direction.x == 0) return;
 
         float harfWidth = boxCollider.bounds.size.x / 2;
-        float maxX = GameManager.Instance.MaxX - harfWidth;
-        float minX = GameManager.Instance.MinX + harfWidth;
+        float maxX = GameManager.Instance.ScreenMaxX - harfWidth;
+        float minX = GameManager.Instance.ScreenMinX + harfWidth;
 
         float nextX = transform.position.x + (movementDirection.x * paddle.speed * Time.deltaTime);
 
@@ -46,14 +46,6 @@ public class PaddleMovement : MonoBehaviour
 
         transform.position = new Vector3(nextX, transform.position.y, transform.position.z);
 
-        //if (transform.position.x > GameManager.Instance.MinX
-        //    && transform.position.x < GameManager.Instance.MaxX)
-        //{
-        //    Vector3 move = new Vector3(movementDirection.x, 0, 0) * paddle.speed * Time.deltaTime;
-        //    transform.position += move;
-        //}
-
-        //rigidbody.velocity = movementDirection * paddle.speed;
     }
 
 }
