@@ -201,12 +201,6 @@ public class BounceBallReflect : MonoBehaviour
         direction.x += paddleSpeedEffect;
         direction = direction.normalized;
 
-        // 공의 속도를 일정 범위 내에서 유지 (최소 및 최대 속도 적용)
-        //float currentSpeed = rb2d.velocity.magnitude;
-        //float minSpeed = 5f; // 최소 속도
-        //float maxSpeed = 20f; // 최대 속도
-        //float finalSpeed = Mathf.Clamp(currentSpeed, minSpeed, maxSpeed);
-
         ball.Reflected(paddle.gameObject);
         // 공의 속도를 기존 속도 크기에 맞춰 반사
         movement.Move(direction * ball.Stat.CurrentBallSpeed);

@@ -1,8 +1,4 @@
-using System;
-using System.Reflection;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BounceBall : MonoBehaviour
 {
