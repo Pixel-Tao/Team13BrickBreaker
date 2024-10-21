@@ -18,4 +18,10 @@ public class GameoverPlayerSlot : MonoBehaviour
     {
         scoreText.text = score.ToString("#,##0");
     }
+
+    public void Clear()
+    {
+        nameInputText.text = "";
+        scoreText.text = "0";
+    }
 }

@@ -12,6 +12,9 @@ public class GameoverPopup : PopupBase
 
     public override void Init()
     {
+        player1ScoreBoard.Clear();
+        player2ScoreBoard.Clear();
+
         if (GameManager.Instance.PlayModeType == Defines.PlayModeType.Single)
         {
             player1ScoreBoard.gameObject.SetActive(true);
@@ -87,7 +90,7 @@ public class GameoverPopup : PopupBase
             return;
 
         // 점수가 낮으면 저장 안함
-        int minScore = data.scores.Min(s => s.score);
+        int minScore = data.scores.Count == 0 ? 0 : data.scores.Min(s => s.score);
         if (minScore > GameManager.Instance.GetScore(slot.playerType))
             return;
 
