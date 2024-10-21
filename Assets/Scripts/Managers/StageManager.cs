@@ -1,48 +1,33 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
-using UnityEditor.U2D.Aseprite;
-using UnityEngine;
 
-public class StageManager : MonoBehaviour
+public class StageManager : Singleton<StageManager>
 {
-    private static StageManager _instance;
-    public static StageManager Instance { get { Init(); return _instance; } }
-
     public event Action<int> OnCheckAchievementAndUnlockEvent;
     public event Action OnStageClearEvent;
 
-    public int SelectedStage { get; private set; } = 1;
+    public int SelectedStage { get; private set; }
     public Stage CurrentStage { get; private set; }
     public StageSO StageSO { get; private set; }
     public int BrickCount { get; private set; }
 
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "StageManager" };
-            _instance = go.AddComponent<StageManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
+    private bool isStageClear = false;
 
     public void InitStage(StageSO stageSO)
     {
         this.StageSO = stageSO;
         this.BrickCount = 0;
+        this.SelectedStage = StageSO.firstStage;
     }
 
     public void LoadStage()
     {
-        if(SelectedStage > StageSO.stages.Count)
+        if (SelectedStage > StageSO.stages.Count)
         {
             GameManager.Instance.Ending();
             return;
         }
 
+        isStageClear = false;
         StageData stageData = StageSO.stages[SelectedStage - 1];
         CurrentStage = Instantiate(stageData.stagePrefab).GetComponent<Stage>();
         CurrentStage?.SetData(stageData);
@@ -82,6 +67,8 @@ public class StageManager : MonoBehaviour
     public void TryStageClear()
     {
         if (BrickCount > 0) return;
+        if (isStageClear) return;
+        isStageClear = true;
         UIManager.Instance.ShowPopup<StageClearPopup>().SetStage(CurrentStage.StageData);
         // 업적 업데이트 하고
         UnlockAchievement(SelectedStage);

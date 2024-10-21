@@ -4,23 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class SaveManager : MonoBehaviour
+public class SaveManager : Singleton<SaveManager>
 {
     private readonly string SAVE_DIR = "SaveDatas";
-
-    private static SaveManager _instance;
-    public static SaveManager Instance { get { Init(); return _instance; } }
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "SaveManager" };
-            _instance = go.AddComponent<SaveManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
 
     public void Save<T>(T data) where T : class
     {

@@ -3,26 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    private static UIManager _instance;
-    public static UIManager Instance { get { Init(); return _instance; } }
-
     public event Action<FadeType, Action> OnFadeEvent;
 
     private Dictionary<string, PopupBase> popups = new Dictionary<string, PopupBase>();
-
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "UIManager" };
-            _instance = go.AddComponent<UIManager>();
-            DontDestroyOnLoad(go);
-        }
-    }
 
     public void ClearEvent()
     {

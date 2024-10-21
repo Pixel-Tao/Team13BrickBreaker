@@ -22,12 +22,8 @@ public enum AudioClipType
     gameover,
 }
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-    private static AudioManager _instance;
-    public static AudioManager Instance { get { Init(); return _instance; } }
-
-
     private AudioSource bgm;
     public AudioSource Bgm
     {
@@ -55,17 +51,6 @@ public class AudioManager : MonoBehaviour
                 sfx = go.AddComponent<AudioSource>();
             }
             return sfx;
-        }
-    }
-
-    private static void Init()
-    {
-        if (_instance == null)
-        {
-            // GameManager 동적 생성
-            GameObject go = new GameObject { name = "AudioManager" };
-            _instance = go.AddComponent<AudioManager>();
-            DontDestroyOnLoad(go);
         }
     }
 

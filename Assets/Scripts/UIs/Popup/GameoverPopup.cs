@@ -82,6 +82,15 @@ public class GameoverPopup : PopupBase
         string name = slot.GetInputName();
         SaveScoreDataList data = SaveManager.Instance.Load<SaveScoreDataList>();
 
+        // 입력된 이름 값이 없으면 저장 안함
+        if (string.IsNullOrWhiteSpace(name))
+            return;
+
+        // 점수가 낮으면 저장 안함
+        int minScore = data.scores.Min(s => s.score);
+        if (minScore > GameManager.Instance.GetScore(slot.playerType))
+            return;
+
         if (data.scores.Count >= 10)
             data.scores.RemoveAt(data.scores.Count - 1);
 
